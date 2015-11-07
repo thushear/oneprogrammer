@@ -4,7 +4,7 @@
   <subtitle><![CDATA[养成写博客的好习惯]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://yoursite.com/"/>
-  <updated>2015-11-07T14:31:49.266Z</updated>
+  <updated>2015-11-07T14:53:58.737Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -13,6 +13,58 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title></title>
+    <link href="http://yoursite.com/2015/11/07/lua2/"/>
+    <id>http://yoursite.com/2015/11/07/lua2/</id>
+    <published>2015-11-07T14:53:58.805Z</published>
+    <updated>2015-11-07T14:53:58.737Z</updated>
+    <content type="html"><![CDATA[<p>title: lua2<br>date: 2015-11-07 22:37:18<br>categories:</p>
+<ul>
+<li>lua<br>tags:</li>
+<li>lua</li>
+</ul>
+<h1 id="Nginx入门">Nginx入门</h1><p>本文目的是学习Nginx+Lua开发，对于Nginx基本知识可以参考如下文章：</p>
+<p>nginx启动、关闭、重启</p>
+<p><a href="http://www.cnblogs.com/derekchen/archive/2011/02/17/1957209.html" target="_blank" rel="external">http://www.cnblogs.com/derekchen/archive/2011/02/17/1957209.html</a></p>
+<p>agentzh 的 Nginx 教程</p>
+<p><a href="http://openresty.org/download/agentzh-nginx-tutorials-zhcn.html" target="_blank" rel="external">http://openresty.org/download/agentzh-nginx-tutorials-zhcn.html</a></p>
+<p>Nginx+Lua入门</p>
+<p><a href="http://17173ops.com/2013/11/01/17173-ngx-lua-manual.shtml" target="_blank" rel="external">http://17173ops.com/2013/11/01/17173-ngx-lua-manual.shtml</a></p>
+<p>nginx 配置指令的执行顺序</p>
+<p><a href="http://zhongfox.github.io/blog/server/2013/05/15/nginx-exec-order/" target="_blank" rel="external">http://zhongfox.github.io/blog/server/2013/05/15/nginx-exec-order/</a></p>
+<p>nginx与lua的执行顺序和步骤说明</p>
+<p><a href="http://www.mrhaoting.com/?p=157" target="_blank" rel="external">http://www.mrhaoting.com/?p=157</a></p>
+<p>Nginx配置文件nginx.conf中文详解</p>
+<p><a href="http://www.ha97.com/5194.html" target="_blank" rel="external">http://www.ha97.com/5194.html</a></p>
+<p>Tengine的Nginx开发从入门到精通</p>
+<p><a href="http://tengine.taobao.org/book/" target="_blank" rel="external">http://tengine.taobao.org/book/</a></p>
+<p>官方文档</p>
+<p><a href="http://wiki.nginx.org/Configuration" target="_blank" rel="external">http://wiki.nginx.org/Configuration</a></p>
+<h1 id="Lua入门">Lua入门</h1><p>本文目的是学习Nginx+Lua开发，对于Lua基本知识可以参考如下文章：</p>
+<p>Lua简明教程</p>
+<p><a href="http://coolshell.cn/articles/10739.html" target="_blank" rel="external">http://coolshell.cn/articles/10739.html</a></p>
+<p>lua在线lua学习教程</p>
+<p><a href="http://book.luaer.cn/" target="_blank" rel="external">http://book.luaer.cn/</a></p>
+<p>Lua 5.1 参考手册</p>
+<p><a href="http://www.codingnow.com/2000/download/lua_manual.html" target="_blank" rel="external">http://www.codingnow.com/2000/download/lua_manual.html</a></p>
+<p>Lua5.3 参考手册</p>
+<p><a href="http://cloudwu.github.io/lua53doc/" target="_blank" rel="external">http://cloudwu.github.io/lua53doc/</a></p>
+<h1 id="Nginx_Lua_API">Nginx Lua API</h1><p>和一般的Web Server类似，我们需要接收请求、处理并输出响应。而对于请求我们需要获取如请求参数、请求头、Body体等信息；而对于处理就是调用相应的Lua代码即可；输出响应需要进行响应状态码、响应头和响应内容体的输出。因此我们从如上几个点出发即可。</p>
+<h2 id="接收请求">接收请求</h2><p>1、example.conf配置文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">location ~ /lua_request/(\d+)/(\d+) &#123;  </span><br><span class="line">    <span class="comment">#设置nginx变量  </span></span><br><span class="line">    <span class="built_in">set</span> <span class="variable">$a</span> <span class="variable">$1</span>;   </span><br><span class="line">    <span class="built_in">set</span> <span class="variable">$b</span> <span class="variable">$host</span>;  </span><br><span class="line">    default_<span class="built_in">type</span> <span class="string">"text/html"</span>;  </span><br><span class="line">    <span class="comment">#nginx内容处理  </span></span><br><span class="line">    content_by_lua_file /usr/example/lua/<span class="built_in">test</span>_request.lua;  </span><br><span class="line">    <span class="comment">#内容体处理完成后调用  </span></span><br><span class="line">    <span class="built_in">echo</span>_after_body <span class="string">"ngx.var.b <span class="variable">$b</span>"</span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>2 test_request.lua </p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>title: lua2<br>date: 2015-11-07 22:37:18<br>categories:</p>
+<ul>
+<li>lua<br>tags:</li>
+<li>lua</li>
+</ul>
+<h1 id="Nginx入门">Nginx入门</h1><p]]>
+    </summary>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[nginx和lua开发一]]></title>
