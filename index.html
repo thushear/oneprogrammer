@@ -3,26 +3,25 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Hexo</title>
+  <title>thushear的角落</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description">
+  <meta name="description" content="养成写博客的好习惯">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
+<meta property="og:title" content="thushear的角落">
 <meta property="og:url" content="http://yoursite.com/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description">
+<meta property="og:site_name" content="thushear的角落">
+<meta property="og:description" content="养成写博客的好习惯">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
-<meta name="twitter:description">
+<meta name="twitter:title" content="thushear的角落">
+<meta name="twitter:description" content="养成写博客的好习惯">
   
-    <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="thushear的角落" type="application/atom+xml">
   
   
     <link rel="icon" href="/favicon.png">
   
-  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+ <!--  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css"> -->
   <link rel="stylesheet" href="/css/style.css" type="text/css">
-  
 
 </head>
 <body>
@@ -33,8 +32,12 @@
   <div id="header-outer" class="outer">
     <div id="header-title" class="inner">
       <h1 id="logo-wrap">
-        <a href="/" id="logo">Hexo</a>
+        <a href="/" id="logo">thushear的角落</a>
       </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">养成写博客的好习惯</a>
+        </h2>
       
     </div>
     <div id="header-inner" class="inner">
@@ -60,6 +63,163 @@
 </header>
       <div class="outer">
         <section id="main">
+  
+    <article id="post-lua1" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/11/07/lua1/" class="article-date">
+  <time datetime="2015-11-07T11:26:33.000Z" itemprop="datePublished">2015-11-07</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/lua/">lua</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/11/07/lua1/">nginx和lua开发一</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="环境">环境</h1><p>安装环境<br>安装步骤可以参考<a href="http://openresty.org/#Installation。" target="_blank" rel="external">http://openresty.org/#Installation。</a></p>
+<h2 id="系统:_Centos">系统: Centos</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wget http:<span class="comment">//openresty.org/download/ngx_openresty-1.7.7.2.tar.gz</span></span><br><span class="line"> yum install readline-devel pcre-devel openssl-devel </span><br><span class="line"> tar xzvf ngx_openresty-<span class="number">1.7</span><span class="number">.7</span><span class="number">.2</span>.tar.gz </span><br><span class="line"> cd ngx_openresty-<span class="number">1.7</span><span class="number">.7</span><span class="number">.2</span></span><br><span class="line">  cd bundle/LuaJIT-<span class="number">2.1</span>-<span class="number">20150120</span>/</span><br><span class="line">  make clean &amp;&amp; make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+<h2 id="下载ngx_cache_purge模块，该模块用于清理nginx缓存">下载ngx_cache_purge模块，该模块用于清理nginx缓存</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/servers/ngx_openresty-<span class="number">1.7</span><span class="number">.7</span><span class="number">.2</span>/bundle</span><br><span class="line">wget https:<span class="comment">//github.com/FRiCKLE/ngx_cache_purge/archive/2.3.tar.gz</span></span><br><span class="line">tar -xvf <span class="number">2.3</span>.tar.gz</span><br></pre></td></tr></table></figure>
+<p>下载nginx_upstream_check_module模块，该模块用于upstream健康检查<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/servers/ngx_openresty-<span class="number">1.7</span><span class="number">.7</span><span class="number">.2</span>/bundle</span><br><span class="line">wget https:<span class="comment">//github.com/yaoweibin/nginx_upstream_check_module/archive/v0.3.0.tar.gz</span></span><br><span class="line">tar -xvf v0<span class="number">.3</span><span class="number">.0</span>.tar.gz</span><br></pre></td></tr></table></figure></p>
+<h2 id="安装ngx_openresty">安装ngx_openresty</h2><figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/servers/ngx_openresty-<span class="number">1.7</span>.<span class="number">7.2</span>  </span><br><span class="line">./configure --prefix=/usr/servers --<span class="keyword">with</span>-http_realip_module  --<span class="keyword">with</span>-pcre  --<span class="keyword">with</span>-luajit --<span class="keyword">add</span>-<span class="keyword">module</span>=./bundle/ngx_cache_purge-<span class="number">2.3</span>/ --<span class="keyword">add</span>-<span class="keyword">module</span>=./bundle/nginx_upstream_check_module-<span class="number">0.3</span>.<span class="number">0</span>/ -j2  </span><br><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+<p>下载nginx(nginx-1.2.4.tar.g)   <a href="http://nginx.org/" target="_blank" rel="external">http://nginx.org/</a><br>下载pcre(pcre-8.31.tar.gz)    <a href="http://pcre.org/" target="_blank" rel="external">http://pcre.org/</a></p>
+<p>如果报错: <strong>undefined reference to `pcre_free_study’</strong></p>
+<p>下周<br><a href="http://exim.mirror.fr/pcre/" target="_blank" rel="external">http://exim.mirror.fr/pcre/</a><br>执行<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">tar zxvf pcre-<span class="number">8.31</span>.tar.gz</span><br><span class="line">cd pcre-<span class="number">8.31</span></span><br><span class="line">./congigure</span><br><span class="line">make</span><br><span class="line">make install </span><br><span class="line">/configure --prefix=<span class="regexp">/usr/</span>servers --<span class="keyword">with</span>-http_realip_module  --<span class="keyword">with</span>-pcre  --<span class="keyword">with</span>-luajit --add-<span class="built_in">module</span>=./bundle/ngx_cache_purge-<span class="number">2.3</span>/ --add-<span class="built_in">module</span>=./bundle/nginx_upstream_check_module-<span class="number">0.3</span><span class="number">.0</span>/ --<span class="keyword">with</span>-pcre=<span class="regexp">/export/</span>servers/pcre-<span class="number">8.31</span>  -j2</span><br></pre></td></tr></table></figure></p>
+<p>命令含义<br>–with<em>*</em> 安装一些内置/集成的模块<br>–with-http_realip_module 取用户真实ip模块<br>-with-pcre Perl兼容的达式模块<br>–with-luajit 集成luajit模块<br>–add-module 添加自定义的第三方模块，如此次的ngx_che_purge</p>
+<p>到/usr/servers目录下<br><code>cd /usr/servers/
+ll</code></p>
+<p>会发现多出来了如下目录，说明安装成功<br>/usr/servers/luajit ：luajit环境，luajit类似于java的jit，即即时编译，lua是一种解释语言，通过luajit可以即时编译<br>lua代码到机器代码，得到很好的性能；<br>/usr/servers/lualib：要使用的lua库，里边提供了一些默认的lua库，如redis，json库等，也可以把一些自己开发的<br>或第三方的放在这；<br>/usr/servers/nginx ：安装的nginx；</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/11/07/lua1/" data-id="cigooq3gm0006j0t7cpxmszkb" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/lua/">lua</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-nodejs" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/11/07/nodejs/" class="article-date">
+  <time datetime="2015-11-07T06:02:51.152Z" itemprop="datePublished">2015-11-07</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/markdown/">markdown</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/11/07/nodejs/">markdown</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<ul>
+<li>markdown</li>
+</ul>
+</blockquote>
+<p><img src="https://www.zybuluo.com/static/img/logo.png" alt="markdown-logo"> </p>
+<p>##什么是MarkDown<br>Markdown 是一种方便记忆、书写的纯文本标记语言，用户可以使用这些标记符号以最小的输入代价生成极富表现力的文档：譬如您正在阅读的这份文档。它使用简单的符号标记不同的标题，分割不同的段落，<strong>粗体</strong> 或者 <em>斜体</em> 某些文字，更棒的是，它还可以</p>
+<h3 id="1_TODO_Todo列表">1 TODO <a href="https://www.zybuluo.com/mdeditor?url=https://www.zybuluo.com/static/editor/md-help.markdown#13-待办事宜-todo-列表" target="_blank" rel="external">Todo列表</a></h3><p>###高亮 [^code]<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure></p>
+<h3 id="6-_绘制表格">6. 绘制表格</h3><table>
+<thead>
+<tr>
+<th>项目</th>
+<th style="text-align:right">价格</th>
+<th style="text-align:center">数量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>计算机</td>
+<td style="text-align:right">\$1600</td>
+<td style="text-align:center">5</td>
+</tr>
+<tr>
+<td>手机</td>
+<td style="text-align:right">\$12</td>
+<td style="text-align:center">12</td>
+</tr>
+<tr>
+<td>管线</td>
+<td style="text-align:right">\$1</td>
+<td style="text-align:center">234</td>
+</tr>
+</tbody>
+</table>
+<h3 id="1-_实时同步预览">1. 实时同步预览</h3><p>我们将 Cmd Markdown 的主界面一分为二，左边为<strong>编辑区</strong>，右边为<strong>预览区</strong>，在编辑区的操作会实时地渲染到预览区方便查看最终的版面效果，并且如果你在其中一个区拖动滚动条，我们有一个巧妙的算法把另一个区的滚动条同步到等价的位置，超酷！</p>
+<h3 id="2-_编辑工具栏">2. 编辑工具栏</h3><p>也许您还是一个 Markdown 语法的新手，在您完全熟悉它之前，我们在 <strong>编辑区</strong> 的顶部放置了一个如下图所示的工具栏，您可以使用鼠标在工具栏上调整格式，不过我们仍旧鼓励你使用键盘标记格式，提高书写的流畅度。</p>
+<p><img src="https://www.zybuluo.com/static/img/toolbar-editor.png" alt="tool-editor"></p>
+<p>二、Markdown 语法的简要规则<br>标题</p>
+<p><img src="http://cdn.sspai.com/attachment/thumbnail/2014/04/15/620e64aa6522f5eaeb788a8b5f1faa5c10f74_mw_800_wm_1_wmp_3.jpg" alt="markdown"><br>标题是每篇文章都需要也是最常用的格式，在 Markdown 中，如果一段文字被定义为标题，只要在这段文字前加 # 号即可。</p>
+<h1 id="一级标题">一级标题</h1><h2 id="二级标题">二级标题</h2><h3 id="三级标题">三级标题</h3><p>以此类推，总共六级标题，建议在井号后加一个空格，这是最标准的 Markdown 语法。</p>
+<p>列表</p>
+<p>熟悉 HTML 的同学肯定知道有序列表与无序列表的区别，在 Markdown 下，列表的显示只需要在文字前加上 - 或 * 即可变为无序列表，有序列表则直接在文字前加 1. 2. 3. 符号要和文字之间加上一个字符的空格。</p>
+<p><img src="http://cdn.sspai.com/attachment/thumbnail/2014/04/15/a72338b96cf4bfc1dacd610756786ae310f75_mw_800_wm_1_wmp_3.jpg" alt="m2"></p>
+<p>引用</p>
+<p>如果你需要引用一小段别处的句子，那么就要用引用的格式。</p>
+<blockquote>
+<p>例如这样</p>
+</blockquote>
+<p>只需要在文本前加入 &gt; 这种尖括号（大于号）即可</p>
+<p><img src="http://cdn.sspai.com/attachment/thumbnail/2014/04/15/07bd8bf6fd38ea7d3bffdc3cae04f6f210f76_mw_800_wm_1_wmp_3.jpg" alt="m3"></p>
+<p>图片与链接</p>
+<p>插入链接与插入图片的语法很像，区别在一个 !号</p>
+<p>插入图片的地址需要图床，这里推荐 CloudApp 的服务，生成URL地址即可。</p>
+<p><img src="http://cdn.sspai.com/attachment/thumbnail/2014/04/15/f96c892fc63933ab186235f7c910753b10f77_mw_800_wm_1_wmp_3.jpg" alt="m4"></p>
+<p>粗体与斜体</p>
+<p>Markdown 的粗体和斜体也非常简单，用两个 <em> 包含一段文本就是粗体的语法，用一个 </em> 包含一段文本就是斜体的语法。</p>
+<p>例如：这里是粗体 这里是斜体<br>表格</p>
+<p>表格是我觉得 Markdown 比较累人的地方，例子如下：</p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">|<span class="string"> Tables        </span>|<span class="string"> Are           </span>|<span class="string"> Cool  </span>|</span><br><span class="line">|<span class="string"> ------------- </span>|<span class="string">:-------------:</span>|<span class="string"> -----:</span>|</span><br><span class="line">|<span class="string"> col 3 is      </span>|<span class="string"> right-aligned </span>|<span class="string"> $1600 </span>|</span><br><span class="line">|<span class="string"> col 2 is      </span>|<span class="string"> centered      </span>|<span class="string">   $12 </span>|</span><br><span class="line">|<span class="string"> zebra stripes </span>|<span class="string"> are neat      </span>|<span class="string">    $1 </span>|</span><br></pre></td></tr></table></figure>
+<p>代码框</p>
+<p>如果你是个程序猿，需要在文章里优雅的引用代码框，在 Markdown 下实现也非常简单，只需要用两个 <code>把中间的代码包裹起来，如</code>code`。图例：<br><img src="http://cdn.sspai.com/attachment/thumbnail/2014/04/15/0135456d6a3c1051f0ed54e37cef070010f78_mw_800_wm_1_wmp_3.jpg" alt="m5"></p>
+<p>分割线</p>
+<p>分割线的语法只需要另起一行，连续输入三个星号 <em>*</em> 即可</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/11/07/nodejs/" data-id="cigooq3gj0003j0t7o0jukw1c" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
   
     <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -96,9 +256,54 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/11/06/hello-world/" data-id="cignmo5wa0000iwt7h25l1bi7" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/11/06/hello-world/" data-id="cigooq3go0007j0t7ysxn0ojm" class="article-share-link">Share</a>
       
       
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-demo" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/10/21/demo/" class="article-date">
+  <time datetime="2015-10-21T02:34:12.000Z" itemprop="datePublished">2015-10-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2015/10/21/demo/">辨析 Sass 中的 Map 和 List</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>如果你使用过 Sass 3.3 之前的版本，那么你一定对那段时光颇有感触，那时候没有现如今这么好的条件，那时候的 Map 还只能用多重列表（lists of list）来模拟。多重列表可以实现复杂数据的嵌套定义，但却不是以键值对的形式实现的，所有当我们需要获取其中特定的某一项时就会比较麻烦。Map 这种数据类型天生就是基于键值对的形式，非常便于组织数据。</p>
+<p>自从可以使用 Map 之后，开发者们开始毫无顾忌地定义 Map 存储数据，比如断点宽度、颜色值、栅格布局等等响应式排版的细节，都被一股脑的塞进了 Map 中。</p>
+<p>那么，有了 Map 之后，我们还有必要使用 List 吗？可能某些人会觉得为了保持向后兼容应该继续使用多重列表模拟 Map，因为可能有些开发者仍然在使用老版本的 Sass 编译器，但实际上，这是多此一举了，Sass 的版本通常由 <code>package.json</code> 或者其他同类型的项目配置文件所控制，往往只需一条命令（<code>gem update sass</code>）即可更新 Sass 的版本，因此基本上无需考虑对老版本的兼容问题。</p>
+        
+          <p class="article-more-link">
+            <a href="/2015/10/21/demo/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/10/21/demo/" data-id="cigooq3fq0000j0t7w1x8f5jr" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/css/">css</a></li></ul>
+
     </footer>
   </div>
   
@@ -112,16 +317,37 @@
           <aside id="sidebar">
   
     
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/lua/">lua</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/markdown/">markdown</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
   
     
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lua/">lua</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
   
     
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/lua/" style="font-size: 10px;">lua</a>
+    </div>
+  </div>
+
   
     
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -133,7 +359,19 @@
       <ul>
         
           <li>
+            <a href="/2015/11/07/lua1/">nginx和lua开发一</a>
+          </li>
+        
+          <li>
+            <a href="/2015/11/07/nodejs/">markdown</a>
+          </li>
+        
+          <li>
             <a href="/2015/11/06/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2015/10/21/demo/">辨析 Sass 中的 Map 和 List</a>
           </li>
         
       </ul>
@@ -148,7 +386,7 @@
   
   <div class="outer">
     <div id="footer-info" class="inner">
-      &copy; 2015 John Doe<br>
+      &copy; 2015 thushear<br>
       Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
@@ -163,7 +401,7 @@
 </nav>
     
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="//apps.bdimg.com/libs/jquery/2.0.3/jquery.min.js"></script>
 
 
   <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">

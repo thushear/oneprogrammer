@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title><![CDATA[thushear的角落]]></title>
+  <subtitle><![CDATA[养成写博客的好习惯]]></subtitle>
+  <link href="/atom.xml" rel="self"/>
+  <link href="http://yoursite.com/"/>
+  <updated>2015-11-07T12:55:10.929Z</updated>
+  <id>http://yoursite.com/</id>
+  
+  <author>
+    <name><![CDATA[thushear]]></name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[nginx和lua开发一]]></title>
+    <link href="http://yoursite.com/2015/11/07/lua1/"/>
+    <id>http://yoursite.com/2015/11/07/lua1/</id>
+    <published>2015-11-07T11:26:33.000Z</published>
+    <updated>2015-11-07T12:55:10.929Z</updated>
+    <content type="html"><![CDATA[<h1 id="环境">环境</h1><p>安装环境<br>安装步骤可以参考<a href="http://openresty.org/#Installation。" target="_blank" rel="external">http://openresty.org/#Installation。</a></p>
+<h2 id="系统:_Centos">系统: Centos</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wget http:<span class="comment">//openresty.org/download/ngx_openresty-1.7.7.2.tar.gz</span></span><br><span class="line"> yum install readline-devel pcre-devel openssl-devel </span><br><span class="line"> tar xzvf ngx_openresty-<span class="number">1.7</span><span class="number">.7</span><span class="number">.2</span>.tar.gz </span><br><span class="line"> cd ngx_openresty-<span class="number">1.7</span><span class="number">.7</span><span class="number">.2</span></span><br><span class="line">  cd bundle/LuaJIT-<span class="number">2.1</span>-<span class="number">20150120</span>/</span><br><span class="line">  make clean &amp;&amp; make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+<h2 id="下载ngx_cache_purge模块，该模块用于清理nginx缓存">下载ngx_cache_purge模块，该模块用于清理nginx缓存</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/servers/ngx_openresty-<span class="number">1.7</span><span class="number">.7</span><span class="number">.2</span>/bundle</span><br><span class="line">wget https:<span class="comment">//github.com/FRiCKLE/ngx_cache_purge/archive/2.3.tar.gz</span></span><br><span class="line">tar -xvf <span class="number">2.3</span>.tar.gz</span><br></pre></td></tr></table></figure>
+<p>下载nginx_upstream_check_module模块，该模块用于upstream健康检查<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/servers/ngx_openresty-<span class="number">1.7</span><span class="number">.7</span><span class="number">.2</span>/bundle</span><br><span class="line">wget https:<span class="comment">//github.com/yaoweibin/nginx_upstream_check_module/archive/v0.3.0.tar.gz</span></span><br><span class="line">tar -xvf v0<span class="number">.3</span><span class="number">.0</span>.tar.gz</span><br></pre></td></tr></table></figure></p>
+<h2 id="安装ngx_openresty">安装ngx_openresty</h2><figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/servers/ngx_openresty-<span class="number">1.7</span>.<span class="number">7.2</span>  </span><br><span class="line">./configure --prefix=/usr/servers --<span class="keyword">with</span>-http_realip_module  --<span class="keyword">with</span>-pcre  --<span class="keyword">with</span>-luajit --<span class="keyword">add</span>-<span class="keyword">module</span>=./bundle/ngx_cache_purge-<span class="number">2.3</span>/ --<span class="keyword">add</span>-<span class="keyword">module</span>=./bundle/nginx_upstream_check_module-<span class="number">0.3</span>.<span class="number">0</span>/ -j2  </span><br><span class="line">make &amp;&amp; make install</span><br></pre></td></tr></table></figure>
+<p>下载nginx(nginx-1.2.4.tar.g)   <a href="http://nginx.org/" target="_blank" rel="external">http://nginx.org/</a><br>下载pcre(pcre-8.31.tar.gz)    <a href="http://pcre.org/" target="_blank" rel="external">http://pcre.org/</a></p>
+<p>如果报错: <strong>undefined reference to `pcre_free_study’</strong></p>
+<p>下周<br><a href="http://exim.mirror.fr/pcre/" target="_blank" rel="external">http://exim.mirror.fr/pcre/</a><br>执行<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">tar zxvf pcre-<span class="number">8.31</span>.tar.gz</span><br><span class="line">cd pcre-<span class="number">8.31</span></span><br><span class="line">./congigure</span><br><span class="line">make</span><br><span class="line">make install </span><br><span class="line">/configure --prefix=<span class="regexp">/usr/</span>servers --<span class="keyword">with</span>-http_realip_module  --<span class="keyword">with</span>-pcre  --<span class="keyword">with</span>-luajit --add-<span class="built_in">module</span>=./bundle/ngx_cache_purge-<span class="number">2.3</span>/ --add-<span class="built_in">module</span>=./bundle/nginx_upstream_check_module-<span class="number">0.3</span><span class="number">.0</span>/ --<span class="keyword">with</span>-pcre=<span class="regexp">/export/</span>servers/pcre-<span class="number">8.31</span>  -j2</span><br></pre></td></tr></table></figure></p>
+<p>命令含义<br>–with<em>*</em> 安装一些内置/集成的模块<br>–with-http_realip_module 取用户真实ip模块<br>-with-pcre Perl兼容的达式模块<br>–with-luajit 集成luajit模块<br>–add-module 添加自定义的第三方模块，如此次的ngx_che_purge</p>
+<p>到/usr/servers目录下<br><code>cd /usr/servers/
+ll</code></p>
+<p>会发现多出来了如下目录，说明安装成功<br>/usr/servers/luajit ：luajit环境，luajit类似于java的jit，即即时编译，lua是一种解释语言，通过luajit可以即时编译<br>lua代码到机器代码，得到很好的性能；<br>/usr/servers/lualib：要使用的lua库，里边提供了一些默认的lua库，如redis，json库等，也可以把一些自己开发的<br>或第三方的放在这；<br>/usr/servers/nginx ：安装的nginx；</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<h1 id="环境">环境</h1><p>安装环境<br>安装步骤可以参考<a href="http://openresty.org/#Installation。" target="_blank" rel="external">http://openresty.org/#Ins]]>
+    </summary>
+    
+      <category term="lua" scheme="http://yoursite.com/tags/lua/"/>
+    
+      <category term="lua" scheme="http://yoursite.com/categories/lua/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[markdown]]></title>
+    <link href="http://yoursite.com/2015/11/07/nodejs/"/>
+    <id>http://yoursite.com/2015/11/07/nodejs/</id>
+    <published>2015-11-07T06:02:51.152Z</published>
+    <updated>2015-11-07T06:02:51.074Z</updated>
+    <content type="html"><![CDATA[<blockquote>
+<ul>
+<li>markdown</li>
+</ul>
+</blockquote>
+<p><img src="https://www.zybuluo.com/static/img/logo.png" alt="markdown-logo"> </p>
+<p>##什么是MarkDown<br>Markdown 是一种方便记忆、书写的纯文本标记语言，用户可以使用这些标记符号以最小的输入代价生成极富表现力的文档：譬如您正在阅读的这份文档。它使用简单的符号标记不同的标题，分割不同的段落，<strong>粗体</strong> 或者 <em>斜体</em> 某些文字，更棒的是，它还可以</p>
+<h3 id="1_TODO_Todo列表">1 TODO <a href="https://www.zybuluo.com/mdeditor?url=https://www.zybuluo.com/static/editor/md-help.markdown#13-待办事宜-todo-列表" target="_blank" rel="external">Todo列表</a></h3><p>###高亮 [^code]<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure></p>
+<h3 id="6-_绘制表格">6. 绘制表格</h3><table>
+<thead>
+<tr>
+<th>项目</th>
+<th style="text-align:right">价格</th>
+<th style="text-align:center">数量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>计算机</td>
+<td style="text-align:right">\$1600</td>
+<td style="text-align:center">5</td>
+</tr>
+<tr>
+<td>手机</td>
+<td style="text-align:right">\$12</td>
+<td style="text-align:center">12</td>
+</tr>
+<tr>
+<td>管线</td>
+<td style="text-align:right">\$1</td>
+<td style="text-align:center">234</td>
+</tr>
+</tbody>
+</table>
+<h3 id="1-_实时同步预览">1. 实时同步预览</h3><p>我们将 Cmd Markdown 的主界面一分为二，左边为<strong>编辑区</strong>，右边为<strong>预览区</strong>，在编辑区的操作会实时地渲染到预览区方便查看最终的版面效果，并且如果你在其中一个区拖动滚动条，我们有一个巧妙的算法把另一个区的滚动条同步到等价的位置，超酷！</p>
+<h3 id="2-_编辑工具栏">2. 编辑工具栏</h3><p>也许您还是一个 Markdown 语法的新手，在您完全熟悉它之前，我们在 <strong>编辑区</strong> 的顶部放置了一个如下图所示的工具栏，您可以使用鼠标在工具栏上调整格式，不过我们仍旧鼓励你使用键盘标记格式，提高书写的流畅度。</p>
+<p><img src="https://www.zybuluo.com/static/img/toolbar-editor.png" alt="tool-editor"></p>
+<p>二、Markdown 语法的简要规则<br>标题</p>
+<p><img src="http://cdn.sspai.com/attachment/thumbnail/2014/04/15/620e64aa6522f5eaeb788a8b5f1faa5c10f74_mw_800_wm_1_wmp_3.jpg" alt="markdown"><br>标题是每篇文章都需要也是最常用的格式，在 Markdown 中，如果一段文字被定义为标题，只要在这段文字前加 # 号即可。</p>
+<h1 id="一级标题">一级标题</h1><h2 id="二级标题">二级标题</h2><h3 id="三级标题">三级标题</h3><p>以此类推，总共六级标题，建议在井号后加一个空格，这是最标准的 Markdown 语法。</p>
+<p>列表</p>
+<p>熟悉 HTML 的同学肯定知道有序列表与无序列表的区别，在 Markdown 下，列表的显示只需要在文字前加上 - 或 * 即可变为无序列表，有序列表则直接在文字前加 1. 2. 3. 符号要和文字之间加上一个字符的空格。</p>
+<p><img src="http://cdn.sspai.com/attachment/thumbnail/2014/04/15/a72338b96cf4bfc1dacd610756786ae310f75_mw_800_wm_1_wmp_3.jpg" alt="m2"></p>
+<p>引用</p>
+<p>如果你需要引用一小段别处的句子，那么就要用引用的格式。</p>
+<blockquote>
+<p>例如这样</p>
+</blockquote>
+<p>只需要在文本前加入 &gt; 这种尖括号（大于号）即可</p>
+<p><img src="http://cdn.sspai.com/attachment/thumbnail/2014/04/15/07bd8bf6fd38ea7d3bffdc3cae04f6f210f76_mw_800_wm_1_wmp_3.jpg" alt="m3"></p>
+<p>图片与链接</p>
+<p>插入链接与插入图片的语法很像，区别在一个 !号</p>
+<p>插入图片的地址需要图床，这里推荐 CloudApp 的服务，生成URL地址即可。</p>
+<p><img src="http://cdn.sspai.com/attachment/thumbnail/2014/04/15/f96c892fc63933ab186235f7c910753b10f77_mw_800_wm_1_wmp_3.jpg" alt="m4"></p>
+<p>粗体与斜体</p>
+<p>Markdown 的粗体和斜体也非常简单，用两个 <em> 包含一段文本就是粗体的语法，用一个 </em> 包含一段文本就是斜体的语法。</p>
+<p>例如：这里是粗体 这里是斜体<br>表格</p>
+<p>表格是我觉得 Markdown 比较累人的地方，例子如下：</p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">|<span class="string"> Tables        </span>|<span class="string"> Are           </span>|<span class="string"> Cool  </span>|</span><br><span class="line">|<span class="string"> ------------- </span>|<span class="string">:-------------:</span>|<span class="string"> -----:</span>|</span><br><span class="line">|<span class="string"> col 3 is      </span>|<span class="string"> right-aligned </span>|<span class="string"> $1600 </span>|</span><br><span class="line">|<span class="string"> col 2 is      </span>|<span class="string"> centered      </span>|<span class="string">   $12 </span>|</span><br><span class="line">|<span class="string"> zebra stripes </span>|<span class="string"> are neat      </span>|<span class="string">    $1 </span>|</span><br></pre></td></tr></table></figure>
+<p>代码框</p>
+<p>如果你是个程序猿，需要在文章里优雅的引用代码框，在 Markdown 下实现也非常简单，只需要用两个 <code>把中间的代码包裹起来，如</code>code`。图例：<br><img src="http://cdn.sspai.com/attachment/thumbnail/2014/04/15/0135456d6a3c1051f0ed54e37cef070010f78_mw_800_wm_1_wmp_3.jpg" alt="m5"></p>
+<p>分割线</p>
+<p>分割线的语法只需要另起一行，连续输入三个星号 <em>*</em> 即可</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<blockquote>
+<ul>
+<li>markdown</li>
+</ul>
+</blockquote>
+<p><img src="https://www.zybuluo.com/static/img/logo.png" alt="markdown-logo"> </p>
+]]>
+    </summary>
+    
+      <category term="markdown" scheme="http://yoursite.com/categories/markdown/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Hello World]]></title>
+    <link href="http://yoursite.com/2015/11/06/hello-world/"/>
+    <id>http://yoursite.com/2015/11/06/hello-world/</id>
+    <published>2015-11-06T12:00:03.292Z</published>
+    <updated>2015-11-06T12:00:03.292Z</updated>
+    <content type="html"><![CDATA[<p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
+<h2 id="Quick_Start">Quick Start</h2><h3 id="Create_a_new_post">Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
+<h3 id="Run_server">Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
+<h3 id="Generate_static_files">Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
+<h3 id="Deploy_to_remote_sites">Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io]]>
+    </summary>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[辨析 Sass 中的 Map 和 List]]></title>
+    <link href="http://yoursite.com/2015/10/21/demo/"/>
+    <id>http://yoursite.com/2015/10/21/demo/</id>
+    <published>2015-10-21T02:34:12.000Z</published>
+    <updated>2015-11-07T01:54:53.962Z</updated>
+    <content type="html"><![CDATA[<p>如果你使用过 Sass 3.3 之前的版本，那么你一定对那段时光颇有感触，那时候没有现如今这么好的条件，那时候的 Map 还只能用多重列表（lists of list）来模拟。多重列表可以实现复杂数据的嵌套定义，但却不是以键值对的形式实现的，所有当我们需要获取其中特定的某一项时就会比较麻烦。Map 这种数据类型天生就是基于键值对的形式，非常便于组织数据。</p>
+<p>自从可以使用 Map 之后，开发者们开始毫无顾忌地定义 Map 存储数据，比如断点宽度、颜色值、栅格布局等等响应式排版的细节，都被一股脑的塞进了 Map 中。</p>
+<p>那么，有了 Map 之后，我们还有必要使用 List 吗？可能某些人会觉得为了保持向后兼容应该继续使用多重列表模拟 Map，因为可能有些开发者仍然在使用老版本的 Sass 编译器，但实际上，这是多此一举了，Sass 的版本通常由 <code>package.json</code> 或者其他同类型的项目配置文件所控制，往往只需一条命令（<code>gem update sass</code>）即可更新 Sass 的版本，因此基本上无需考虑对老版本的兼容问题。</p>
+<a id="more"></a>
+<p>使用多重列表替代 Map 的优势之一就是减少代码量。下面让我们来比较一下多种列表和 Map 的语法结构以及遍历方式。</p>
+<h2 id="测试表格">测试表格</h2><table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>site</code></td>
+<td>Sitewide information.</td>
+</tr>
+<tr>
+<td><code>page</code></td>
+<td>Page specific information and custom variables set in front-matter.</td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td>Site configuration</td>
+</tr>
+<tr>
+<td><code>theme</code></td>
+<td>Theme configuration. Inherits from site configuration.</td>
+</tr>
+<tr>
+<td><code>_</code> (single underscore)</td>
+<td><a href="http://lodash.com/" target="_blank" rel="external">Lodash</a> library</td>
+</tr>
+<tr>
+<td><code>path</code></td>
+<td>Path of current page</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td>Full URL of current page</td>
+</tr>
+<tr>
+<td><code>env</code></td>
+<td>Environment variables</td>
+</tr>
+</tbody>
+</table>
+<h2 id="语法比较">语法比较</h2><div class="note"><br>    <h5>测试标题</h5><br>    <p>在下面的示例中，我创建了一个用于控制响应式布局的数据，该数据一共有四个断点，每一个断点都包含了 <code>min-width</code>、<code>max-width</code>、<code>font-size</code> 和 <code>line-height</code> 四个样式。</p><br></div>
+
+<h4 id="Map_语法">Map 语法</h4><p>下面就是使用 Map 存储的数据，具体来说，该 Map 中首先存储了四个用于标识断点的 Key，相对应的是保存具体属性值得 Value。虽然这种形式可读性更高，但是总体代码量却高达 26 行 450 个字符。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$breakpoint-map: (&#10;&#160; &#160; small: (&#10;&#160; &#160; &#160; &#160; min-width: null,&#10;&#160; &#160; &#160; &#160; max-width: 479px,&#10;&#160; &#160; &#160; &#160; base-font: 16px,&#10;&#160; &#160; &#160; &#160; vertical-rhythm: 1.3&#10;&#160; &#160; ),&#10;&#160; &#160; medium: (&#10;&#160; &#160; &#160; &#160; min-width: 480px,&#10;&#160; &#160; &#160; &#160; max-width: 959px,&#10;&#160; &#160; &#160; &#160; base-font: 18px,&#10;&#160; &#160; &#160; &#160; vertical-rhythm: 1.414&#10;&#160; &#160; ),&#10;&#160; &#160; large: (&#10;&#160; &#160; &#160; &#160; min-width: 960px,&#10;&#160; &#160; &#160; &#160; max-width: 1099px,&#10;&#160; &#160; &#160; &#160; base-font: 18px,&#10;&#160; &#160; &#160; &#160; vertical-rhythm: 1.5&#10;&#160; &#160; ),&#10;&#160; &#160; xlarge: (&#10;&#160; &#160; &#160; &#160; min-width: 1100px,&#10;&#160; &#160; &#160; &#160; max-width: null,&#10;&#160; &#160; &#160; &#160; base-font: 21px,&#10;&#160; &#160; &#160; &#160; vertical-rhythm: 1.618&#10;&#160; &#160; )&#10;);</span><br></pre></td></tr></table></figure>
+<h4 id="多重列表语法">多重列表语法</h4><p>下面的多重列表存储了和上面 Map 同样的数据，在多重列表中没有 Key-Value 的对应关系，这意味着要想找到特定的值，必须使用遍历或 <code>nth()</code> 的方式来实现了。从另一个角度来看，多种列表又比 Map 的代码量小得多，总共只有六行 180 个字符。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$breakpoint-list: (&#10;&#160; &#160; (small, null, 479px, 16px, 1.3),&#10;&#160; &#160; (medium, 480px, 959px, 18px, 1.414),&#10;&#160; &#160; (large, 960px, 1099px, 18px, 1.5),&#10;&#160; &#160; (xlarge, 1100px, null, 21px, 1.618)&#10;);</span><br></pre></td></tr></table></figure>
+<h2 id="遍历比较">遍历比较</h2><div class="note info"><br>    <h5>测试标题</h5><br>    <p>从上面简单地比较中可以粗略的看出，多种列表的代码量明显少于 Map。但是，如果我们需要遍历这些值得话，复杂度又是怎样的呢？</p><br></div>
+
+<h4 id="遍历_Map">遍历 Map</h4><p>我们可以使用如下的代码遍历 Map：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@each $label, $map in $breakpoint-map &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的变量 <code>$label</code> 和 <code>$map</code> 会随着对 <code>$breakpoint-map</code> 的遍历被动态地赋值，<code>$label</code> 将会被赋值为 <code>$breakpoint-map</code> 的 Key，而 <code>$map</code> 会被赋值为 <code>$breakpoint-map</code> 的 Value。为了在遍历过程中获取特定值，我们就需要使用 Sass 原生的 <code>map-get()</code> 函数，使用该函数需要传入两个参数：Map 的名字和求取的 Key，最后返回该 Map 中匹配该 Key 的 Value。</p>
+<p>具体的做法就是使用 <code>@each</code> 遍历 Map，然后使用 <code>map-get()</code> 获取特定值，最终只需要六行代码 220 个字符即可完成整个遍历：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@each $label, $map in $breakpoint-map &#123;&#10;&#160; &#160; $min-width: map-get($map, min-width);&#10;&#160; &#160; $max-width: map-get($map, max-width);&#10;&#160; &#160; $base-font: map-get($map, base-font);&#10;&#160; &#160; $vertical-rhythm: map-get($map, vertical-rhythm);&#10;&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="遍历多重列表">遍历多重列表</h4><p>遍历多重列表不必像遍历 Map 一样动态获取到 Map 后再使用 <code>map-get()</code> 函数取特定值，直接遍历一遍即可获得特定值。</p>
+<p>因为多种列表内层的每一个列表结构相同，都有按照相同顺序排列的五个值，所以我们可以持续遍历每个值并赋值给特定的变量。无需调用 <code>map-get()</code>，直接引用这些变量即可进行赋值等裸机操作。最终遍历多重列表只使用了两行代码 100 个字符：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@each $label, $min-width, $max-width, $base-font, $vertical-rhythm in $breakpoint-list &#123;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="慎用多重列表">慎用多重列表</h2><div class="note warning"><br>    <h5>测试标题</h5><br>    <p>经过上述的比对，看起来多重列表各方面都在碾压 Map，实则不然，Sass 中添加 Map 有一条非常重要的原因就是：Key-Value 的映射关系。</p><br></div>
+
+<h4 id="遗漏键值">遗漏键值</h4><p>如果要使用多重列表，那么就必须保证自己非常熟悉多重列表内部的每一项所代表的意义。下面我们举个例子，来看看遗漏了某些值的情况：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$breakpoint-list: (&#10;&#160; &#160; (small, null, 479px, 16px, 1.3),&#10;&#160; &#160; (medium, 480px, 959px, 18px, 1.414),&#10;&#160; &#160; (large, 960px, 1099px, 18px, 1.5),&#10;&#160; &#160; (xlarge, 1100px, 21px, 1.618)&#10;);&#10;&#10;p &#123;&#10;&#160; &#160; @each $label, $min-width, $max-width, $base-font, $vertical-rhythm in $breakpoint-list &#123;&#10;&#160; &#160; &#160; &#160; @if $min-width &#123;&#10;&#160; &#160; &#160; &#160; &#160; &#160; @include breakpoint( $min-width ) &#123;&#10;&#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; font-size: $base-font;&#10;&#160; &#160; &#160; &#160; &#160; &#160; &#160; &#160; line-height: $vertical-rhythm;&#10;&#160; &#160; &#160; &#160; &#160; &#160; &#125;&#10;&#160; &#160; &#160; &#160; &#125; @else &#123;&#10;&#160; &#160; &#160; &#160; &#160; &#160; font-size: $base-font;&#10;&#160; &#160; &#160; &#160; &#160; &#160; line-height: $vertical-rhythm;&#10;&#160; &#160; &#160; &#160; &#125;&#10;&#160; &#160; &#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>当我们尝试运行这段代码时，结果肯定是错误地，因为在 <code>$breakpoint-list</code> 的最后一行，<code>xlarge</code> 被赋值给了 <code>$label</code>，<code>1100px</code> 被赋值给了 <code>$min-width</code>，<code>21px</code> 被赋值给了 <code>$max-width</code>, <code>1.618</code> 被赋值给了 <code>$base-font</code>，最终导致 <code>$vertical-rhythm</code> 没有被赋值，结果就是 <code>font-size</code> 的属性值是错的，<code>line-height</code> 的属性值是空的。此外，Sass 还不会对此抛出错误，导致我们无从知晓错误所在。</p>
+<p>如果我们使用 Map 来代替这里的多重列表，那么使用 <code>map-get()</code> 函数即使遇见空值也能正确获得想要的结果。这就是值得我们慎重思考的地方：多种列表虽然简单快速，但是丧失了 Map 中的容错能力和快速取值能力。</p>
+<h4 id="查找特定列表">查找特定列表</h4><p>在多重列表中查找特定列表简直就是一种折磨。如果使用 Map，那么配合 <code>map-get()</code> 函数可以快速定位到特定子 Map：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$medium-map: map-get($maps, medium);</span><br></pre></td></tr></table></figure>
+<p>但如果要获取多种列表 <code>medium</code> 列表，麻烦可就大了：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@function get-list($label) &#123;&#10;&#160; &#160; @each $list in $breakpoint-list &#123;&#10;&#160; &#160; &#160; &#160; @if nth($list, 1) == $label &#123;&#10;&#160; &#160; &#160; &#160; &#160; &#160; @return $list;&#10;&#160; &#160; &#160; &#160; &#125;&#10;&#160; &#160; &#125;&#10;&#160; &#160; @return null;&#10;&#125;&#10;$medium-list: get-list(medium);</span><br></pre></td></tr></table></figure>
+<p>这段代码的逻辑就是遍历整个多重列表，知道找到第一个匹配项，然后返回，如果一直没有找到匹配项，就一直遍历到末尾，然后返回 <code>null</code>。这实际上就是手工实现了 <code>map-get()</code> 的逻辑。</p>
+<h4 id="缺少原生的_Map_函数">缺少原生的 Map 函数</h4><p>Sass 提供了诸多的原生函数用于处理 Map 数据类型，但是多重列表是没法调用这些函数的，比如，使用 <code>map-merge()</code> 可以合并两个 Map，如果两个 Map 有相同的值，则取第二个 Map 的值为最终值。当然你也可以在多重列表中使用 <code>join()</code> 或 <code>append()</code> 来增加新列表，从而模拟出 <code>map-merge()</code> 的效果。</p>
+<p>另一个实用的 Map 函数就是 <code>map-has-key()</code>，对于依赖 <code>map-get()</code> 的自定义函数来说，<code>map-has-key()</code> 可以用来验证特定的 Key 是否存在。但在列表中是完全没有相似的方法。</p>
+<h2 id="总结">总结</h2><div class="note unreleased"><br>    <h5>Test Title</h5><br>    <p>相比起列表来说，Key-Value 模型的 Map 显然更有力量，原生的 Sass Map 函数更是提供了强力的数据查找和验证工具。</p><br></div>
+
+<p>虽然多重列表代码量少，但并不能像 Map 一样进行错误检查或验证参数。在大多数时候，相比较多重列表而言，我相信 Map 是更好的选择。如果是为了更少的代码量和其他简单地调用，那么我偶尔会用用多重列表，但是从项目的宏观控制和数据存储方面显然更优秀。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>如果你使用过 Sass 3.3 之前的版本，那么你一定对那段时光颇有感触，那时候没有现如今这么好的条件，那时候的 Map 还只能用多重列表（lists of list）来模拟。多重列表可以实现复杂数据的嵌套定义，但却不是以键值对的形式实现的，所有当我们需要获取其中特定的某一项时就会比较麻烦。Map 这种数据类型天生就是基于键值对的形式，非常便于组织数据。</p>
+<p>自从可以使用 Map 之后，开发者们开始毫无顾忌地定义 Map 存储数据，比如断点宽度、颜色值、栅格布局等等响应式排版的细节，都被一股脑的塞进了 Map 中。</p>
+<p>那么，有了 Map 之后，我们还有必要使用 List 吗？可能某些人会觉得为了保持向后兼容应该继续使用多重列表模拟 Map，因为可能有些开发者仍然在使用老版本的 Sass 编译器，但实际上，这是多此一举了，Sass 的版本通常由 <code>package.json</code> 或者其他同类型的项目配置文件所控制，往往只需一条命令（<code>gem update sass</code>）即可更新 Sass 的版本，因此基本上无需考虑对老版本的兼容问题。</p>]]>
+    
+    </summary>
+    
+      <category term="css" scheme="http://yoursite.com/tags/css/"/>
+    
+  </entry>
+  
+</feed>
