@@ -4,7 +4,7 @@
   <subtitle><![CDATA[养成写博客的好习惯]]></subtitle>
   <link href="/atom.xml" rel="self"/>
   <link href="http://yoursite.com/"/>
-  <updated>2015-11-07T14:53:58.737Z</updated>
+  <updated>2015-11-07T14:58:10.034Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,17 +15,12 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title></title>
+    <title><![CDATA[nginx和lua开发二]]></title>
     <link href="http://yoursite.com/2015/11/07/lua2/"/>
     <id>http://yoursite.com/2015/11/07/lua2/</id>
-    <published>2015-11-07T14:53:58.805Z</published>
-    <updated>2015-11-07T14:53:58.737Z</updated>
-    <content type="html"><![CDATA[<p>title: lua2<br>date: 2015-11-07 22:37:18<br>categories:</p>
-<ul>
-<li>lua<br>tags:</li>
-<li>lua</li>
-</ul>
-<h1 id="Nginx入门">Nginx入门</h1><p>本文目的是学习Nginx+Lua开发，对于Nginx基本知识可以参考如下文章：</p>
+    <published>2015-11-07T14:37:18.000Z</published>
+    <updated>2015-11-07T14:58:10.034Z</updated>
+    <content type="html"><![CDATA[<h1 id="Nginx入门">Nginx入门</h1><p>本文目的是学习Nginx+Lua开发，对于Nginx基本知识可以参考如下文章：</p>
 <p>nginx启动、关闭、重启</p>
 <p><a href="http://www.cnblogs.com/derekchen/archive/2011/02/17/1957209.html" target="_blank" rel="external">http://www.cnblogs.com/derekchen/archive/2011/02/17/1957209.html</a></p>
 <p>agentzh 的 Nginx 教程</p>
@@ -56,13 +51,14 @@
 <p>2 test_request.lua </p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>title: lua2<br>date: 2015-11-07 22:37:18<br>categories:</p>
-<ul>
-<li>lua<br>tags:</li>
-<li>lua</li>
-</ul>
-<h1 id="Nginx入门">Nginx入门</h1><p]]>
+    <![CDATA[<h1 id="Nginx入门">Nginx入门</h1><p>本文目的是学习Nginx+Lua开发，对于Nginx基本知识可以参考如下文章：</p>
+<p>nginx启动、关闭、重启</p>
+<p><a href="http://www.cnblogs.com/derekche]]>
     </summary>
+    
+      <category term="lua" scheme="http://yoursite.com/tags/lua/"/>
+    
+      <category term="lua" scheme="http://yoursite.com/categories/lua/"/>
     
   </entry>
   
