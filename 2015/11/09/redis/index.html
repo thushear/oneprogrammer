@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>nginx和lua开发之Redis安装与使用 | thushear的角落</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Redis安装与使用1、下载redis并安装
+12345cd /usr/servers/     wget https://github.com/antirez/redis/archive/2.8.19.tar.gz     tar -xvf 2.8.19.tar.gz     cd redis-2.8.19/     make
+2、后台启动Redis服务器
+1nohup /usr/servers">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nginx和lua开发之Redis安装与使用">
+<meta property="og:url" content="http://yoursite.com/2015/11/09/redis/index.html">
+<meta property="og:site_name" content="thushear的角落">
+<meta property="og:description" content="Redis安装与使用1、下载redis并安装
+12345cd /usr/servers/     wget https://github.com/antirez/redis/archive/2.8.19.tar.gz     tar -xvf 2.8.19.tar.gz     cd redis-2.8.19/     make
+2、后台启动Redis服务器
+1nohup /usr/servers">
+<meta property="og:updated_time" content="2015-11-09T11:45:02.231Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="nginx和lua开发之Redis安装与使用">
+<meta name="twitter:description" content="Redis安装与使用1、下载redis并安装
+12345cd /usr/servers/     wget https://github.com/antirez/redis/archive/2.8.19.tar.gz     tar -xvf 2.8.19.tar.gz     cd redis-2.8.19/     make
+2、后台启动Redis服务器
+1nohup /usr/servers">
+  
+    <link rel="alternative" href="/atom.xml" title="thushear的角落" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+ <!--  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css"> -->
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">thushear的角落</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">天行健,君子以自强不息</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-redis" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/11/09/redis/" class="article-date">
+  <time datetime="2015-11-09T11:26:33.000Z" itemprop="datePublished">2015-11-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/redis/">redis</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      nginx和lua开发之Redis安装与使用
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Redis安装与使用">Redis安装与使用</h1><p>1、下载redis并安装</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/servers/  </span><br><span class="line">   wget https:<span class="comment">//github.com/antirez/redis/archive/2.8.19.tar.gz  </span></span><br><span class="line">   tar -xvf <span class="number">2.8</span><span class="number">.19</span>.tar.gz  </span><br><span class="line">   cd redis-<span class="number">2.8</span><span class="number">.19</span>/  </span><br><span class="line">   make</span><br></pre></td></tr></table></figure>
+<p>2、后台启动Redis服务器</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup /usr/servers/redis-<span class="number">2.8</span><span class="number">.19</span>/src/redis-server  /usr/servers/redis-<span class="number">2.8</span><span class="number">.19</span>/redis.conf &amp;</span><br></pre></td></tr></table></figure>
+<p>3、查看是否启动成功</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ps</span> -aux | <span class="keyword">grep</span> redis</span><br></pre></td></tr></table></figure>
+<p>4、进入客户端</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/servers/redis-<span class="number">2.8</span><span class="number">.19</span>/src/redis-cli  -p <span class="number">6379</span></span><br></pre></td></tr></table></figure>
+<p>5、执行如下命令  </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span>&gt; <span class="built_in">set</span> i <span class="number">1</span>  </span><br><span class="line">OK  </span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span>&gt; get i  </span><br><span class="line"><span class="string">"1"</span></span><br></pre></td></tr></table></figure>
+<p>通过如上命令可以看到我们的Redis安装成功。更多细节请参考<a href="http://redis.io/。" target="_blank" rel="external">http://redis.io/。</a></p>
+<h1 id="Twemproxy安装与使用">Twemproxy安装与使用</h1><p>首先需要安装autoconf、automake、libtool工具，比如ubuntu可以使用如下命令安装</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt-get <span class="operator"><span class="keyword">install</span> autoconf automake  </span><br><span class="line">  apt-<span class="keyword">get</span> <span class="keyword">install</span> libtool</span></span><br></pre></td></tr></table></figure>
+<p>1、下载Twemproxy并安装</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/servers  </span><br><span class="line">wget https:<span class="comment">//github.com/twitter/twemproxy/archive/v0.4.0.tar.gz  </span></span><br><span class="line">tar -xvf v0<span class="number">.4</span><span class="number">.0</span>.tar.gz    </span><br><span class="line">cd twemproxy-<span class="number">0.4</span><span class="number">.0</span>/  </span><br><span class="line">autoreconf -fvi  </span><br><span class="line">./configure &amp;&amp; make</span><br></pre></td></tr></table></figure>
+<p>此处根据要注意，如上安装方式在有些服务器上可能在大量如mset时可能导致Twemproxy崩溃，需要使用如 CFLAGS=”-O1” ./configure &amp;&amp; make或CFLAGS=”-O3 -fno-strict-aliasing” ./configure &amp;&amp; make安装。</p>
+<p> 2、配置</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /usr/servers/twemproxy-<span class="number">0.4</span><span class="number">.0</span>/conf/nutcracker.yml</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">server1:  </span><br><span class="line">  listen: <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">1111</span>  </span><br><span class="line">  hash: fnv1a_64  </span><br><span class="line">  distribution: ketama  </span><br><span class="line">  redis: <span class="literal">true</span>  </span><br><span class="line">  servers:  </span><br><span class="line">   - <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6379</span>:<span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>3、启动Twemproxy代理</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">/usr/</span>servers<span class="regexp">/twemproxy-0.4.0/</span>src<span class="regexp">/nutcracker  -d -c /u</span>sr<span class="regexp">/servers/</span>twemproxy-<span class="number">0.4</span>.<span class="number">0</span><span class="regexp">/conf/</span>nutcracker.yml</span><br></pre></td></tr></table></figure>
+<p>-d指定后台启动  -c指定配置文件；此处我们指定了代理端口为1111，其他配置的含义后续介绍。<br>4、查看是否启动成功  </p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ps</span> -aux | <span class="keyword">grep</span> nutcracker</span><br></pre></td></tr></table></figure>
+<p>5、进入客户端</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/servers/redis-<span class="number">2.8</span><span class="number">.19</span>/src/redis-cli  -p <span class="number">1111</span></span><br></pre></td></tr></table></figure>
+<p>6、执行如下命令 </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">1111</span>&gt; <span class="built_in">set</span> i <span class="number">1</span>  </span><br><span class="line">OK  </span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">1111</span>&gt; get i  </span><br><span class="line"><span class="string">"1"</span></span><br></pre></td></tr></table></figure>
+<p>Twemproxy文档请参考<a href="https://github.com/twitter/twemproxy。" target="_blank" rel="external">https://github.com/twitter/twemproxy。</a></p>
+<p>安装  centos<br>autoconf  automake  libtool<br><figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#whereis autoconf #查看autoconf的路径 </span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#rpm -qf /usr/bin/autoconf #查看autoconf的版本</span></span><br><span class="line"><span class="preprocessor">#rpm -e --nodeps autoconf-2.59-12 #卸载原来版本</span></span><br><span class="line"><span class="preprocessor">#tar -zxf autoconf-2.65.tar.gz</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#cd autoconf-2.65</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#./configure --prefix=/usr</span></span><br><span class="line"><span class="preprocessor">#make &amp;&amp; make install</span></span><br><span class="line"><span class="preprocessor">#rpm -qf /usr/bin/autoconf</span></span><br><span class="line"><span class="preprocessor">#rpm -qa | grep autoconf</span></span><br><span class="line"><span class="preprocessor">#/usr/bin/autoconf --help</span></span><br><span class="line"><span class="preprocessor">#/usr/bin/autoconf -V</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="Redis设置">Redis设置</h1><h2 id="基本设置">基本设置</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#端口设置，默认<span class="number">6379</span>  </span></span><br><span class="line">port <span class="number">6379</span>  </span><br><span class="line"><span class="preprocessor">#日志文件，默认/dev/null  </span></span><br><span class="line">logfile <span class="string">""</span></span><br></pre></td></tr></table></figure>
+<h2 id="Redis内存">Redis内存</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">内存大小对应关系  </span><br><span class="line"><span class="preprocessor"># <span class="number">1</span>k =&gt; <span class="number">1000</span> bytes  </span></span><br><span class="line"><span class="preprocessor"># <span class="number">1</span>kb =&gt; <span class="number">1024</span> bytes  </span></span><br><span class="line"><span class="preprocessor"># <span class="number">1</span>m =&gt; <span class="number">1000000</span> bytes  </span></span><br><span class="line"><span class="preprocessor"># <span class="number">1</span>mb =&gt; <span class="number">1024</span>*<span class="number">1024</span> bytes  </span></span><br><span class="line"><span class="preprocessor"># <span class="number">1</span>g =&gt; <span class="number">1000000000</span> bytes  </span></span><br><span class="line"><span class="preprocessor"># <span class="number">1</span>gb =&gt; <span class="number">1024</span>*<span class="number">1024</span>*<span class="number">1024</span> bytes  </span></span><br><span class="line">  </span><br><span class="line"><span class="preprocessor">#设置Redis占用<span class="number">100</span>mb的大小  </span></span><br><span class="line">maxmemory  <span class="number">100</span>mb  </span><br><span class="line">  </span><br><span class="line"><span class="preprocessor">#如果内存满了就需要按照如相应算法进行删除过期的/最老的  </span></span><br><span class="line"><span class="preprocessor">#volatile-lru 根据LRU算法移除设置了过期的key  </span></span><br><span class="line"><span class="preprocessor">#allkeys-lru  根据LRU算法移除任何key(包含那些未设置过期时间的key)  </span></span><br><span class="line"><span class="preprocessor">#volatile-random/allkeys-&gt;random 使用随机算法而不是LRU进行删除  </span></span><br><span class="line"><span class="preprocessor">#volatile-ttl 根据Time-To-Live移除即将过期的key   </span></span><br><span class="line"><span class="preprocessor">#noeviction   永不过期，而是报错  </span></span><br><span class="line">maxmemory-policy <span class="keyword">volatile</span>-lru  </span><br><span class="line">  </span><br><span class="line"><span class="preprocessor">#Redis并不是真正的LRU/TTL，而是基于采样进行移除的，即如采样<span class="number">10</span>个数据移除其中最老的/即将过期的  </span></span><br><span class="line">maxmemory-samples <span class="number">10</span></span><br></pre></td></tr></table></figure>
+<p>而如Memcached是真正的LRU，此处要根据实际情况设置缓存策略，如缓存用户数据时可能带上了过期时间，此时采用volatile-lru即可；而假设我们的数据未设置过期时间，此时可以考虑使用allkeys-lru/allkeys-&gt;random；假设我们的数据不允许从内存删除那就使用noeviction。</p>
+<p>内存大小尽量在系统内存的60%~80%之间，因为如客户端、主从时复制时都需要缓存区的，这些也是耗费系统内存的。</p>
+<p>Redis本身是单线程的，因此我们可以设置每个实例在6-8GB之间，通过启动更多的实例提高吞吐量。如128GB的我们可以开启8GB * 10个实例，充分利用多核CPU。</p>
+<p>##Redis主从</p>
+<p>实际项目时，为了提高吞吐量，我们使用主从策略，即数据写到主Redis，读的时候从从Redis上读，这样可以通过挂载更多的从来提高吞吐量。而且可以通过主从机制，在叶子节点开启持久化方式防止数据丢失。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#在配置文件中挂载主从，不推荐这种方式，我们实际应用时Redis可能是会宕机的  </span></span><br><span class="line"> slaveof masterIP masterPort  </span><br><span class="line"> <span class="preprocessor">#从是否只读，默认yes  </span></span><br><span class="line"> slave-read-only yes  </span><br><span class="line"> <span class="preprocessor">#当从失去与主的连接或者复制正在进行时，从是响应客户端（可能返回过期的数据）还是返回“SYNC with master in progress”错误，默认yes响应客户端  </span></span><br><span class="line"> slave-serve-stale-data yes  </span><br><span class="line"> <span class="preprocessor">#从库按照默认<span class="number">10</span>s的周期向主库发送PING测试连通性  </span></span><br><span class="line"> repl-ping-slave-period <span class="number">10</span>  </span><br><span class="line"> <span class="preprocessor">#设置复制超时时间（SYNC期间批量I/O传输、PING的超时时间），确保此值大于repl-ping-slave-period  </span></span><br><span class="line"> <span class="preprocessor">#repl-timeout <span class="number">60</span>  </span></span><br><span class="line"> <span class="preprocessor">#当从断开与主的连接时的复制缓存区，仅当第一个从断开时创建一个，缓存区越大从断开的时间可以持续越长  </span></span><br><span class="line"> <span class="preprocessor"># repl-backlog-size <span class="number">1</span>mb  </span></span><br><span class="line"> <span class="preprocessor">#当从与主断开持续多久时清空复制缓存区，此时从就需要全量复制了，如果设置为<span class="number">0</span>将永不清空    </span></span><br><span class="line"> <span class="preprocessor"># repl-backlog-ttl <span class="number">3600</span>  </span></span><br><span class="line"> <span class="preprocessor">#slave客户端缓存区，如果缓存区超过<span class="number">256</span>mb将直接断开与从的连接，如果持续<span class="number">60</span>秒超过<span class="number">64</span>mb也会断开与从的连接  </span></span><br><span class="line"> client-output-buffer-limit slave <span class="number">256</span>mb <span class="number">64</span>mb <span class="number">60</span></span><br></pre></td></tr></table></figure>
+<p>主从示例</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cd</span> /usr/servers/redis-<span class="number">2.8</span>.<span class="number">19</span>  </span><br><span class="line"><span class="keyword">cp</span> redis.<span class="keyword">conf</span> redis_6660.<span class="keyword">conf</span>  </span><br><span class="line"><span class="keyword">cp</span> redis.<span class="keyword">conf</span> redis_6661.<span class="keyword">conf</span>  </span><br><span class="line"><span class="keyword">vim</span> redis_6660.<span class="keyword">conf</span>  </span><br><span class="line"><span class="keyword">vim</span> redis_6661.<span class="keyword">conf</span></span><br></pre></td></tr></table></figure>
+<p>将端口分别改为port 6660和port 6661，然后启动</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nohup /usr/servers/redis-<span class="number">2.8</span><span class="number">.19</span>/src/redis-server  /usr/servers/redis-<span class="number">2.8</span><span class="number">.19</span>/redis_6660.conf &amp;  </span><br><span class="line">nohup /usr/servers/redis-<span class="number">2.8</span><span class="number">.19</span>/src/redis-server  /usr/servers/redis-<span class="number">2.8</span><span class="number">.19</span>/redis_6661.conf &amp;</span><br></pre></td></tr></table></figure>
+<p>查看是否启动</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ps</span> -aux | <span class="keyword">grep</span> redis</span><br></pre></td></tr></table></figure>
+<p>进入从客户端，挂主</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/servers/redis-<span class="number">2.8</span><span class="number">.19</span>/src/redis-cli  -p <span class="number">6661</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">127<span class="class">.0</span><span class="class">.0</span><span class="class">.1</span><span class="pseudo">:6661</span>&gt; <span class="tag">slaveof</span> 127<span class="class">.0</span><span class="class">.0</span><span class="class">.1</span> 6660  </span><br><span class="line"> <span class="tag">OK</span>  </span><br><span class="line"> 127<span class="class">.0</span><span class="class">.0</span><span class="class">.1</span><span class="pseudo">:6661</span>&gt; <span class="tag">info</span> <span class="tag">replication</span>  </span><br><span class="line"> # <span class="tag">Replication</span>  </span><br><span class="line"> <span class="tag">role</span><span class="pseudo">:slave</span>  </span><br><span class="line"> <span class="tag">master_host</span><span class="pseudo">:127</span><span class="class">.0</span><span class="class">.0</span><span class="class">.1</span>  </span><br><span class="line"> <span class="tag">master_port</span><span class="pseudo">:6660</span>  </span><br><span class="line"> <span class="tag">master_link_status</span><span class="pseudo">:up</span>  </span><br><span class="line"> <span class="tag">master_last_io_seconds_ago</span><span class="pseudo">:3</span>  </span><br><span class="line"> <span class="tag">master_sync_in_progress</span><span class="pseudo">:0</span>  </span><br><span class="line"> <span class="tag">slave_repl_offset</span><span class="pseudo">:57</span>  </span><br><span class="line"> <span class="tag">slave_priority</span><span class="pseudo">:100</span>  </span><br><span class="line"> <span class="tag">slave_read_only</span><span class="pseudo">:1</span>  </span><br><span class="line"> <span class="tag">connected_slaves</span><span class="pseudo">:0</span>  </span><br><span class="line"> <span class="tag">master_repl_offset</span><span class="pseudo">:0</span>  </span><br><span class="line"> <span class="tag">repl_backlog_active</span><span class="pseudo">:0</span>  </span><br><span class="line"> <span class="tag">repl_backlog_size</span><span class="pseudo">:1048576</span>  </span><br><span class="line"> <span class="tag">repl_backlog_first_byte_offset</span><span class="pseudo">:0</span>  </span><br><span class="line"> <span class="tag">repl_backlog_histlen</span><span class="pseudo">:0</span></span><br></pre></td></tr></table></figure>
+<p> 进入主</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/servers/redis-<span class="number">2.8</span><span class="number">.19</span><span class="preprocessor"># /usr/servers/redis-<span class="number">2.8</span><span class="number">.19</span>/src/redis-cli  -p <span class="number">6660</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6660</span>&gt; info replication  </span><br><span class="line"><span class="preprocessor"># Replication  </span></span><br><span class="line">role:master  </span><br><span class="line">connected_slaves:<span class="number">1</span>  </span><br><span class="line">slave0:ip=<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>,port=<span class="number">6661</span>,state=online,offset=<span class="number">85</span>,lag=<span class="number">1</span>  </span><br><span class="line">master_repl_offset:<span class="number">85</span>  </span><br><span class="line">repl_backlog_active:<span class="number">1</span>  </span><br><span class="line">repl_backlog_size:<span class="number">1048576</span>  </span><br><span class="line">repl_backlog_first_byte_offset:<span class="number">2</span>  </span><br><span class="line">repl_backlog_histlen:<span class="number">84</span>  </span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6660</span>&gt; <span class="built_in">set</span> i <span class="number">1</span>  </span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
+<p>进入从   </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/servers/redis-<span class="number">2.8</span><span class="number">.19</span>/src/redis-cli  -p <span class="number">6661</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6661</span>&gt; get i  </span><br><span class="line"> <span class="string">"1"</span></span><br></pre></td></tr></table></figure>
+<p>此时可以看到主从挂载成功，可以进行主从复制了。使用slaveof no one断开主从。</p>
+<h2 id="Redis持久化">Redis持久化</h2><p>Redis虽然不适合做持久化存储，但是为了防止数据丢失有时需要进行持久化存储，此时可以挂载一个从（叶子节点）只进行持久化存储工作，这样假设其他服务器挂了，我们可以通过这个节点进行数据恢复。</p>
+<p>Redis持久化有RDB快照模式和AOF追加模式，根据自己需求进行选择。</p>
+<h3 id="RDB持久化">RDB持久化</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#格式save seconds changes 即N秒变更N次则保存，从如下默认配置可以看到丢失数据的周期很长，通过save “” 配置可以完全禁用此持久化  </span></span><br><span class="line">save <span class="number">900</span> <span class="number">1</span>    </span><br><span class="line">save <span class="number">300</span> <span class="number">10</span>    </span><br><span class="line">save <span class="number">60</span> <span class="number">10000</span>   </span><br><span class="line"><span class="preprocessor">#RDB是否进行压缩，压缩耗CPU但是可以减少存储大小  </span></span><br><span class="line">rdbcompression yes  </span><br><span class="line"><span class="preprocessor">#RDB保存的位置，默认当前位置    </span></span><br><span class="line">dir ./  </span><br><span class="line"><span class="preprocessor">#RDB保存的数据库名称  </span></span><br><span class="line">dbfilename dump.rdb    </span><br><span class="line"><span class="preprocessor">#不使用AOF模式，即RDB模式  </span></span><br><span class="line">appendonly no</span><br></pre></td></tr></table></figure>
+<p>可以通过set一个数据，然后很快的kill掉redis进程然后再启动会发现数据丢失了。</p>
+<h3 id="AOF持久化">AOF持久化</h3><p>AOF（append only file）即文件追加模式，即把每一个用户操作的命令保存下来，这样就会存在好多重复的命令导致恢复时间过长，那么可以通过相应的配置定期进行AOF重写来减少重复。</p>
+<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#开启AOF  </span></span><br><span class="line">appendonly yes  </span><br><span class="line"><span class="preprocessor">#AOF保存的位置，默认当前位置    </span></span><br><span class="line">dir ./  </span><br><span class="line"><span class="preprocessor">#AOF保存的数据库名称  </span></span><br><span class="line">appendfilename appendonly.aof  </span><br><span class="line"><span class="preprocessor">#持久化策略，默认每秒fsync一次，也可以选择always即每次操作都进行持久化，或者no表示不进行持久化而是借助操作系统的同步将缓存区数据写到磁盘  </span></span><br><span class="line">appendfsync everysec  </span><br><span class="line">  </span><br><span class="line"><span class="preprocessor">#AOF重写策略（同时满足如下两个策略进行重写）  </span></span><br><span class="line"><span class="preprocessor">#当AOF文件大小占到初始文件大小的多少百分比时进行重写  </span></span><br><span class="line">auto-aof-rewrite-percentage <span class="number">100</span>  </span><br><span class="line"><span class="preprocessor">#触发重写的最小文件大小  </span></span><br><span class="line">auto-aof-rewrite-min-size <span class="number">64</span>mb  </span><br><span class="line">  </span><br><span class="line"><span class="preprocessor">#为减少磁盘操作，暂缓重写阶段的磁盘同步  </span></span><br><span class="line">no-appendfsync-on-rewrite no</span><br></pre></td></tr></table></figure>
+<p>此处的appendfsync everysec可以认为是RDB和AOF的一个折中方案。</p>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#当bgsave出错时停止写（MISCONF Redis <span class="keyword">is</span> configured <span class="keyword">to</span> save RDB snapshots, but <span class="keyword">is</span> currently <span class="keyword">not</span> able <span class="keyword">to</span> persist <span class="keyword">on</span> disk.），遇到该错误可以暂时改为no，当写成功后再改回yes</span><br></pre></td></tr></table></figure>
+<p>stop-writes-on-bgsave-error yes</p>
+<p>更多Redis持久化请参考<a href="http://redis.readthedocs.org/en/latest/topic/persistence.html。" target="_blank" rel="external">http://redis.readthedocs.org/en/latest/topic/persistence.html。</a></p>
+<h3 id="Redis动态调整配置">Redis动态调整配置</h3><p>获取maxmemory(10mb) </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6660</span>&gt; config get maxmemory  </span><br><span class="line"><span class="number">1</span>) <span class="string">"maxmemory"</span>  </span><br><span class="line"><span class="number">2</span>) <span class="string">"10485760"</span></span><br></pre></td></tr></table></figure>
+<p>设置新的maxmemory(20mb)</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6660</span>&gt; config <span class="built_in">set</span> maxmemory <span class="number">20971520</span>  </span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
+<p>但是此时重启redis后该配置会丢失，可以执行如下命令重写配置文件</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6660</span>&gt; config rewrite  </span><br><span class="line">  OK</span><br></pre></td></tr></table></figure>
+<p> 注意：此时所有配置包括主从配置都会重写</p>
+<h3 id="Redis执行Lua脚本">Redis执行Lua脚本</h3><p>Redis客户端支持解析和处理lua脚本，因为Redis的单线程机制，我们可以借助Lua脚本实现一些原子操作，如扣减库存/红包之类的。此处不建议使用EVAL直接发送lua脚本到客户端，因为其每次都会进行Lua脚本的解析，而是使用SCRIPT LOAD+ EVALSHA进行操作。未来不知道是否会用luajit来代替lua，让redis lua脚本性能更强。</p>
+<h1 id="Twemproxy设置">Twemproxy设置</h1><p>一旦涉及到一台物理机无法存储的情况就需要考虑使用分片机制将数据存储到多台服务器，可以说是Redis集群；如果客户端都是如Java没什么问题，但是如果有多种类型客户端（如PHP、C）等也要使用那么需要保证它们的分片逻辑是一样的；另外随着客户端的增加，连接数也会随之增多，发展到一定地步肯定会出现连接数不够用的；此时Twemproxy就可以上场了。主要作用：分片、减少连接数。另外还提供了Hash Tag机制来帮助我们将相似的数据存储到同一个分片。另外也可以参考豌豆荚的<a href="https://github.com/wandoulabs/codis。" target="_blank" rel="external">https://github.com/wandoulabs/codis。</a></p>
+<h2 id="基本配置">基本配置</h2><p>其使用YML语法，如</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">server1:  </span><br><span class="line">  listen: <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">1111</span>  </span><br><span class="line">  hash: fnv1a_64  </span><br><span class="line">  distribution: ketama  </span><br><span class="line">  timeout:<span class="number">1000</span>  </span><br><span class="line">  redis: <span class="literal">true</span>  </span><br><span class="line">  servers:  </span><br><span class="line">   - <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6660</span>:<span class="number">1</span>  </span><br><span class="line">   - <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6661</span>:<span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>server1：是给当前分片配置起的名字，一个配置文件可以有多个分片配置；</p>
+<p>listen ： 监听的ip和端口；</p>
+<p>hash：散列算法；</p>
+<p>distribution：分片算法，比如一致性Hash/取模；</p>
+<p>timeout：连接后端Redis或接收响应的超时时间；</p>
+<p>redis：是否是redis代理，如果是false则是memcached代理；</p>
+<p>servers：代理的服务器列表，该列表会使用distribution配置的分片算法进行分片；</p>
+<h2 id="分片算法">分片算法</h2><h3 id="hash算法：">hash算法：</h3><pre><code>one_at_a_time
+
+md5
+
+crc16
+
+crc32 <span class="list">(<span class="keyword">crc32</span> implementation compatible with libmemcached)</span>
+
+crc32a <span class="list">(<span class="keyword">correct</span> crc32 implementation as per the spec)</span>
+
+fnv1_64
+
+fnv1a_64
+
+fnv1_32
+
+fnv1a_32
+
+hsieh
+
+murmur
+
+jenkins
+</code></pre><h3 id="分片算法-1">分片算法</h3><pre><code><span class="function"><span class="title">ketama</span><span class="params">(一致性Hash算法)</span></span>
+
+<span class="function"><span class="title">modula</span><span class="params">(取模)</span></span>
+
+<span class="function"><span class="title">random</span><span class="params">(随机算法)</span></span>
+</code></pre><h3 id="服务器列表">服务器列表</h3><p>  servers:</p>
+<ul>
+<li>ip:port:weight alias</li>
+</ul>
+<p>如</p>
+<p>  servers:</p>
+<ul>
+<li><p>127.0.0.1:6660:1</p>
+</li>
+<li><p>127.0.0.1:6661:1</p>
+</li>
+</ul>
+<p>或者</p>
+<p>  servers:</p>
+<ul>
+<li>127.0.0.1:6660:1 server1</li>
+</ul>
+<ul>
+<li>127.0.0.1:6661:1 server2</li>
+</ul>
+<p>推荐使用后一种方式，默认情况下使用ip:port:weight进行散列并分片，这样假设服务器宕机换上新的服务器，那么此时得到的散列值就不一样了，因此建议给每个配置起一个别名来保证映射到自己想要的服务器。即如果不使用一致性Hash算法来作缓存服务器，而是作持久化存储服务器时就更有必要了（即不存在服务器下线的情况，即使服务器ip:port不一样但仍然要得到一样的分片结果）。</p>
+<p>###HashTag</p>
+<p>比如一个商品有：商品基本信息(p:id:)、商品介绍(d:id:)、颜色尺码(c:id:)等，假设我们存储时不采用HashTag将会导致这些数据不会存储到一个分片，而是分散到多个分片，这样获取时将需要从多个分片获取数据进行合并，无法进行mget；那么如果有了HashTag，那么可以使用“::”中间的数据做分片逻辑，这样id一样的将会分到一个分片。</p>
+<h3 id="nutcracker-yml配置如下">nutcracker.yml配置如下</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">server1:  </span><br><span class="line">    listen: <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">1111</span>  </span><br><span class="line">    hash: fnv1a_64  </span><br><span class="line">    distribution: ketama  </span><br><span class="line">    redis: <span class="literal">true</span>  </span><br><span class="line">    hash_tag: <span class="string">"::"</span>  </span><br><span class="line">    servers:  </span><br><span class="line">     - <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6660</span>:<span class="number">1</span> server1  </span><br><span class="line">     - <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6661</span>:<span class="number">1</span> server2</span><br></pre></td></tr></table></figure>
+<h3 id="连接Twemproxy">连接Twemproxy</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/servers/redis-<span class="number">2.8</span><span class="number">.19</span>/src/redis-cli  -p <span class="number">1111</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">1111</span>&gt; <span class="built_in">set</span> p:<span class="number">12</span>: <span class="number">1</span>  </span><br><span class="line"> OK  </span><br><span class="line"> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">1111</span>&gt; <span class="built_in">set</span> d:<span class="number">12</span>: <span class="number">1</span>  </span><br><span class="line"> OK  </span><br><span class="line"> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">1111</span>&gt; <span class="built_in">set</span> c:<span class="number">12</span>: <span class="number">1</span>  </span><br><span class="line"> OK</span><br></pre></td></tr></table></figure>
+<p>在我的服务器上可以连接6660端口 </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/usr/servers/redis-<span class="number">2.8</span><span class="number">.19</span>/src/redis-cli  -p <span class="number">6660</span>  </span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6660</span>&gt; get p:<span class="number">12</span>:   </span><br><span class="line"><span class="string">"1"</span>  </span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6660</span>&gt; get d:<span class="number">12</span>:   </span><br><span class="line"><span class="string">"1"</span>  </span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6660</span>&gt; get c:<span class="number">12</span>:   </span><br><span class="line"><span class="string">"1"</span></span><br></pre></td></tr></table></figure>
+<h3 id="一致性Hash与服务器宕机">一致性Hash与服务器宕机</h3><p>如果我们把Redis服务器作为缓存服务器并使用一致性Hash进行分片，当有服务器宕机时需要自动从一致性Hash环上摘掉，或者其上线后自动加上，此时就需要如下配置：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#是否在节点故障无法响应时自动摘除该节点，如果作为存储需要设置为为false</span></span><br><span class="line"></span><br><span class="line">auto_eject_hosts: <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#重试时间（毫秒），重新连接一个临时摘掉的故障节点的间隔，如果判断节点正常会自动加到一致性Hash环上</span></span><br><span class="line"></span><br><span class="line">server_retry_timeout: <span class="number">30000</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">#节点故障无法响应多少次从一致性Hash环临时摘掉它，默认是<span class="number">2</span></span></span><br><span class="line"></span><br><span class="line">server_failure_limit: <span class="number">2</span></span><br></pre></td></tr></table></figure>
+<p>###支持的Redis命令</p>
+<p>不是所有Redis命令都支持，请参考<a href="https://github.com/twitter/twemproxy/blob/master/notes/redis.md。" target="_blank" rel="external">https://github.com/twitter/twemproxy/blob/master/notes/redis.md。</a></p>
+<p>因为我们所有的Twemproxy配置文件规则都是一样的，因此我们应该将其移到我们项目中。</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp <span class="regexp">/usr/</span>servers<span class="regexp">/twemproxy-0.4.0/</span>conf<span class="regexp">/nutcracker.yml  /u</span>sr<span class="regexp">/example/</span></span><br></pre></td></tr></table></figure>
+<p>另外Twemproxy提供了启动/重启/停止脚本方便操作，但是需要修改配置文件位置为/usr/example/nutcracker.yml。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chmod +x /usr/servers/twemproxy-<span class="number">0.4</span><span class="number">.0</span>/scripts/nutcracker.init   </span><br><span class="line">vim /usr/servers/twemproxy-<span class="number">0.4</span><span class="number">.0</span>/scripts/nutcracker.init</span><br></pre></td></tr></table></figure>
+<p>  对于扩容最简单的办法是：</p>
+<p>1、创建新的集群；</p>
+<p>2、双写两个集群；</p>
+<p>3、把数据从老集群迁移到新集群（不存在才设置值，防止覆盖新的值）；</p>
+<p>4、复制速度要根据实际情况调整，不能影响老集群的性能；</p>
+<p>5、切换到新集群即可，如果使用Twemproxy代理层的话，可以做到迁移对读的应用透明。</p>
+<p> 原文:<a href="http://jinnianshilongnian.iteye.com/blog/2186787" target="_blank" rel="external">http://jinnianshilongnian.iteye.com/blog/2186787</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2015/11/09/redis/" data-id="cigrvy2ep0003tgt7t3epmmn0" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/lua/">lua</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2015/11/07/lua2/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">nginx和lua开发二</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/lua/">lua</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/markdown/">markdown</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lua/">lua</a><span class="tag-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/lua/" style="font-size: 20px;">lua</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2015/11/09/redis/">nginx和lua开发之Redis安装与使用</a>
+          </li>
+        
+          <li>
+            <a href="/2015/11/07/lua2/">nginx和lua开发二</a>
+          </li>
+        
+          <li>
+            <a href="/2015/11/07/lua1/">nginx和lua开发一</a>
+          </li>
+        
+          <li>
+            <a href="/2015/11/07/nodejs/">markdown</a>
+          </li>
+        
+          <li>
+            <a href="/2015/11/06/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2015 thushear<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//apps.bdimg.com/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>

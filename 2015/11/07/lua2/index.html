@@ -19,7 +19,7 @@ nginx启动、关闭、重启
 http://www.cnblogs.com/derekchen/archive/2011/02/17/1957209.html
 agentzh 的 Nginx 教程
 http://openresty.org/download/agentzh-nginx-tutorials-z">
-<meta property="og:updated_time" content="2015-11-09T04:36:20.682Z">
+<meta property="og:updated_time" content="2015-11-09T04:42:36.366Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="nginx和lua开发二">
 <meta name="twitter:description" content="Nginx入门本文目的是学习Nginx+Lua开发，对于Nginx基本知识可以参考如下文章：
@@ -49,7 +49,7 @@ http://openresty.org/download/agentzh-nginx-tutorials-z">
       </h1>
       
         <h2 id="subtitle-wrap">
-          <a href="/" id="subtitle">养成写博客的好习惯</a>
+          <a href="/" id="subtitle">天行健,君子以自强不息</a>
         </h2>
       
     </div>
@@ -167,142 +167,90 @@ ngx.header：输出响应头；
 <h2 id="Nginx全局内存">Nginx全局内存</h2><p>使用过如Java的朋友可能知道如Ehcache等这种进程内本地缓存，Nginx是一个Master进程多个Worker进程的工作方式，因此我们可能需要在多个Worker进程中共享数据，那么此时就可以使用ngx.shared.DICT来实现全局内存共享。</p>
 <p>1、首先在nginx.conf的http部分分配内存大小<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#共享全局变量，在所有worker间共享  </span></span><br><span class="line">lua_shared_dict shared_data <span class="number">1</span>m;</span><br></pre></td></tr></table></figure></p>
 <p>2、example.conf配置文件<br>    <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location /lua_shared_dict &#123;  </span><br><span class="line">    default_<span class="built_in">type</span> <span class="string">"text/html"</span>;  </span><br><span class="line">    content_by_lua_file /usr/example/lua/<span class="built_in">test</span>_lua_shared_dict.lua;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>3、 test_lua_shared_dict.lua<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">--<span class="number">1</span>、获取全局共享内存变量  </span><br><span class="line"><span class="built_in">local</span> shared_data = ngx.shared.shared_data  </span><br><span class="line">  </span><br><span class="line">--<span class="number">2</span>、获取字典值  </span><br><span class="line"><span class="built_in">local</span> i = shared_data:get(<span class="string">"i"</span>)  </span><br><span class="line"><span class="keyword">if</span> not i <span class="keyword">then</span>  </span><br><span class="line">    i = <span class="number">1</span>  </span><br><span class="line">    --<span class="number">3</span>、惰性赋值  </span><br><span class="line">    shared_data:<span class="built_in">set</span>(<span class="string">"i"</span>, i)  </span><br><span class="line">    ngx.say(<span class="string">"lazy set i "</span>, i, <span class="string">"&lt;br/&gt;"</span>)  </span><br><span class="line">end  </span><br><span class="line">--递增  </span><br><span class="line">i = shared_data:incr(<span class="string">"i"</span>, <span class="number">1</span>)  </span><br><span class="line">ngx.say(<span class="string">"i="</span>, i, <span class="string">"&lt;br/&gt;"</span>)</span><br><span class="line">``` </span><br><span class="line">更多API请参考http://wiki.nginx.org/HttpLuaModule<span class="comment">#ngx.shared.DICT。 </span></span><br><span class="line">到此基本的Nginx Lua API就学完了，对于请求处理和输出响应如上介绍的API完全够用了，更多API请参考官方文档。</span><br><span class="line"></span><br><span class="line"><span class="comment"># Nginx Lua模块指令</span></span><br><span class="line"></span><br><span class="line">Nginx共<span class="number">11</span>个处理阶段，而相应的处理阶段是可以做插入式处理，即可插拔式架构；另外指令可以在http、server、server <span class="keyword">if</span>、location、location <span class="keyword">if</span>几个范围进行配置：</span><br><span class="line"></span><br><span class="line">更详细的解释请参考http://wiki.nginx.org/HttpLuaModule<span class="comment">#Directives。如上指令很多并不常用，因此我们只拿其中的一部分做演示</span></span><br><span class="line"><span class="comment">## init_by_lua</span></span><br><span class="line"></span><br><span class="line">每次Nginx重新加载配置时执行，可以用它来完成一些耗时模块的加载，或者初始化一些全局配置；在Master进程创建Worker进程时，此指令中加载的全局变量会进行Copy-OnWrite，即会复制到所有全局变量到Worker进程。</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="number">1</span>、nginx.conf配置文件中的http部分添加如下代码</span><br><span class="line">``` bash</span><br><span class="line">    <span class="comment">#共享全局变量，在所有worker间共享  </span></span><br><span class="line">    lua_shared_dict shared_data <span class="number">1</span>m;  </span><br><span class="line">      </span><br><span class="line">    init_by_lua_file /usr/example/lua/init.lua;</span><br></pre></td></tr></table></figure></p>
+<p>3  test_lua_shared_dict.lua<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>、获取全局共享内存变量  </span><br><span class="line"><span class="keyword">local</span> shared_data = ngx.shared.shared_data  </span><br><span class="line">  <span class="number">2</span>、获取字典值  </span><br><span class="line"><span class="keyword">local</span> i = shared_data:<span class="keyword">get</span>(<span class="string">"i"</span>)  </span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> i <span class="keyword">then</span>  </span><br><span class="line">    i = <span class="number">1</span>  </span><br><span class="line">    <span class="comment">--3、惰性赋值  </span></span><br><span class="line">    shared_data:<span class="keyword">set</span>(<span class="string">"i"</span>, i)  </span><br><span class="line">    ngx.<span class="command">say</span>(<span class="string">"lazy set i "</span>, i, <span class="string">"&lt;br/&gt;"</span>)  </span><br><span class="line"><span class="keyword">end</span>  </span><br><span class="line"></span><br><span class="line">i = shared_data:incr(<span class="string">"i"</span>, <span class="number">1</span>)  </span><br><span class="line">ngx.<span class="command">say</span>(<span class="string">"i="</span>, i, <span class="string">"&lt;br/&gt;"</span>)</span><br></pre></td></tr></table></figure></p>
+<hr>
+<p>更多API请参考<a href="http://wiki.nginx.org/HttpLuaModule#ngx.shared.DICT。" target="_blank" rel="external">http://wiki.nginx.org/HttpLuaModule#ngx.shared.DICT。</a><br>到此基本的Nginx Lua API就学完了，对于请求处理和输出响应如上介绍的API完全够用了，更多API请参考官方文档。</p>
+<h1 id="Nginx_Lua模块指令">Nginx Lua模块指令</h1><p>Nginx共11个处理阶段，而相应的处理阶段是可以做插入式处理，即可插拔式架构；另外指令可以在http、server、server if、location、location if几个范围进行配置：</p>
+<p>更详细的解释请参考<a href="http://wiki.nginx.org/HttpLuaModule#Directives。如上指令很多并不常用，因此我们只拿其中的一部分做演示" target="_blank" rel="external">http://wiki.nginx.org/HttpLuaModule#Directives。如上指令很多并不常用，因此我们只拿其中的一部分做演示</a></p>
+<h2 id="init_by_lua">init_by_lua</h2><p>每次Nginx重新加载配置时执行，可以用它来完成一些耗时模块的加载，或者初始化一些全局配置；在Master进程创建Worker进程时，此指令中加载的全局变量会进行Copy-OnWrite，即会复制到所有全局变量到Worker进程。</p>
+<p>1、nginx.conf配置文件中的http部分添加如下代码</p>
+<p> 共享全局变量，在所有worker间共享<br>lua_shared_dict shared_data 1m;  </p>
+<p>init_by_lua_file /usr/example/lua/init.lua;  </p>
 <p>2、init.lua</p>
 <pre><code> 初始化耗时的模块  
- <span class="built_in">local</span> redis = <span class="built_in">require</span> <span class="string">'resty.redis'</span>  
-<span class="built_in">local</span> cjson = <span class="built_in">require</span> <span class="string">'cjson'</span>  
+ <span class="built_in">local</span> redis = <span class="keyword">require</span> <span class="string">'resty.redis'</span>  
+<span class="built_in">local</span> cjson = <span class="keyword">require</span> <span class="string">'cjson'</span>  
 
 全局变量，不推荐  
 count = <span class="number">1</span>  
 
 共享全局内存  
-<span class="built_in">local</span> shared_data = ngx.shared.shared_data  
-shared_data:<span class="built_in">set</span>(<span class="string">"count"</span>, <span class="number">1</span>)  &lt;!<span class="comment">--￼12--&gt;</span>
+<span class="built_in">local</span> shared_data = ngx<span class="built_in">.</span>shared<span class="built_in">.</span>shared_data  
+shared_data:<span class="built_in">set</span>(<span class="string">"count"</span>, <span class="number">1</span>)  
 
-<span class="built_in">local</span> count = <span class="number">0</span>  
-<span class="built_in">local</span> delayInSeconds = <span class="number">3</span>  
-<span class="built_in">local</span> heartbeatCheck = nil  
-
-heartbeatCheck = <span class="function"><span class="keyword">function</span>(<span class="title">args</span>)  </span>
-   count = count + <span class="number">1</span>  
-   ngx.<span class="built_in">log</span>(ngx.ERR, <span class="string">"do check "</span>, count)  
-
-   <span class="built_in">local</span> ok, err = ngx.timer.<span class="keyword">at</span>(delayInSeconds, heartbeatCheck)  
-
-   <span class="keyword">if</span> <span class="operator">not</span> ok <span class="keyword">then</span>  
-      ngx.<span class="built_in">log</span>(ngx.ERR, <span class="string">"failed to startup heartbeart worker..."</span>, err)  
-   <span class="function"><span class="keyword">end</span>  
-<span class="title">end</span>  </span>
-
-heartbeatCheck()  
-</code></pre><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">ngx.timer.at：延时调用相应的回调方法；ngx.timer.at(秒单位延时，回调函数，回调函数的参数列表)；可以将延时设置为<span class="number">0</span>即得到一个立即执行的任务，任务不会在当前请求中执行不会阻塞当前请求，而是在一个轻量级线程中执行。</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">另外根据实际情况设置如下指令</span><br><span class="line"></span><br><span class="line">lua_max_pending_timers <span class="number">1024</span>;  <span class="preprocessor">#最大等待任务数</span></span><br><span class="line"></span><br><span class="line">lua_max_running_timers <span class="number">256</span>;    <span class="preprocessor">#最大同时运行任务数</span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">## set_by_lua </span></span><br><span class="line"></span><br><span class="line">设置nginx变量，我们用的<span class="built_in">set</span>指令即使配合<span class="keyword">if</span>指令也很难实现复杂的赋值逻辑；</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="number">1.1</span>、example.conf配置文件</span><br></pre></td></tr></table></figure>
-<pre><code>location /lua_set_1 {  
-    default_type <span class="string">"text/html"</span>;  
-    set_by_lua_file <span class="variable">$num</span> /usr/example/lua/test_set_1.lua;  
-    echo <span class="variable">$num</span>;  
-}  
-</code></pre><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span>_by_lua_file：语法<span class="built_in">set</span>_by_lua_file <span class="variable">$var</span> lua_file arg1 arg2...; 在lua代码中可以实现所有复杂的逻辑，但是要执行速度很快，不要阻塞；</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="number">1.2</span>、<span class="built_in">test</span>_<span class="built_in">set</span>_1.lua</span><br></pre></td></tr></table></figure>
-<pre><code>local uri_args = ngx<span class="class">.req</span><span class="class">.get_uri_args</span>()  
-local <span class="tag">i</span> = uri_args[<span class="string">"i"</span>] or <span class="number">0</span>  
-local j = uri_args[<span class="string">"j"</span>] or <span class="number">0</span>  
-
-return <span class="tag">i</span> + j  
-</code></pre><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">得到请求参数进行相加然后返回。</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">访问如http:<span class="comment">//192.168.1.2/lua_set_1?i=1&amp;j=10进行测试。 如果我们用纯set指令是无法实现的。</span></span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">再举个实际例子，我们实际工作时经常涉及到网站改版，有时候需要新老并存，或者切一部分流量到新版</span><br><span class="line"></span><br><span class="line"><span class="number">2.1</span>、首先在example.conf中使用<span class="built_in">map</span>指令来映射host到指定nginx变量，方便我们测试</span><br></pre></td></tr></table></figure>
-<pre><code><span class="preprocessor">############ 测试时使用的动态请求  </span>
-map <span class="variable">$host</span> <span class="variable">$item_dynamic</span> {  
-    <span class="keyword">default</span>                     <span class="string">"0"</span><span class="comment">;  </span>
-    xxx.com            <span class="string">"1"</span><span class="comment">;  </span>
-}  
-</code></pre><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">此时我们想访问item2014<span class="class">.jd</span><span class="class">.com</span>时访问新版，那么我们可以简单的使用如</span><br></pre></td></tr></table></figure>
-<pre><code><span class="keyword">if</span> (<span class="variable">$item</span>_dynamic = <span class="string">"1"</span>) {  
-   proxy_pass http://new;  
-}  
-proxy_pass http://old;  
-</code></pre><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">但是我们想把商品编号为为<span class="number">8</span>位(比如品类为图书的)没有改版完成，需要按照相应规则跳转到老版，但是其他的到新版；虽然使用<span class="keyword">if</span>指令能实现，但是比较麻烦，基本需要这样</span><br></pre></td></tr></table></figure>
-<pre><code><span class="keyword">set</span> jump <span class="string">"0"</span>;  
-<span class="keyword">if</span>(<span class="variable">$item_dynamic</span> = <span class="string">"1"</span>) {  
-    <span class="keyword">set</span> <span class="variable">$jump</span> <span class="string">"1"</span>;  
-}  
-<span class="keyword">if</span>(uri ~ <span class="string">"^/6[0-9]{7}.html"</span>) {  
-   <span class="keyword">set</span> <span class="variable">$jump</span> <span class="string">"${jump}2"</span>;  
-}  
-<span class="comment">#非强制访问新版，且访问指定范围的商品  </span>
-<span class="keyword">if</span> (jump == <span class="string">"02"</span>) {  
-   proxy_pass <span class="keyword">http</span>://old;  
-}  
-proxy_pass <span class="keyword">http</span>://new;  
-</code></pre><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">以上规则还是比较简单的，如果涉及到更复杂的多重<span class="keyword">if</span>/<span class="keyword">else</span>或嵌套<span class="keyword">if</span>/<span class="keyword">else</span>实现起来就更痛苦了，可能需要到后端去做了；此时我们就可以借助<span class="keyword">lua</span>了：</span><br></pre></td></tr></table></figure>
-<pre><code>set_by_lua $to_book '  
-     <span class="keyword">local</span> ngx_match = ngx.re.<span class="keyword">match</span>  
-     <span class="keyword">local</span> <span class="keyword">var</span> = ngx.<span class="keyword">var</span>  
-     <span class="keyword">local</span> skuId = <span class="keyword">var</span>.skuId  
-     <span class="keyword">local</span> r = <span class="keyword">var</span>.item_dynamic ~= <span class="string">"1"</span> and ngx.re.<span class="keyword">match</span>(skuId, <span class="string">"^[0-9]{8}$"</span>)  
-     <span class="keyword">if</span> r <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"1"</span> <span class="keyword">else</span> <span class="keyword">return</span> <span class="string">"0"</span> end;  
-';  
-set_by_lua $to_mvd '  
-     <span class="keyword">local</span> ngx_match = ngx.re.<span class="keyword">match</span>  
-     <span class="keyword">local</span> <span class="keyword">var</span> = ngx.<span class="keyword">var</span>  
-     <span class="keyword">local</span> skuId = <span class="keyword">var</span>.skuId  
-     <span class="keyword">local</span> r = <span class="keyword">var</span>.item_dynamic ~= <span class="string">"1"</span> and ngx.re.<span class="keyword">match</span>(skuId, <span class="string">"^[0-9]{9}$"</span>)  
-     <span class="keyword">if</span> r <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"1"</span> <span class="keyword">else</span> <span class="keyword">return</span> <span class="string">"0"</span> end;  
-';  
-<span class="comment">#自营图书  </span>
-<span class="keyword">if</span> ($to_book) {  
-    proxy_pass http://<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>/old_book/$skuId.html;  
-}  
-<span class="comment">#自营音像  </span>
-<span class="keyword">if</span> ($to_mvd) {  
-    proxy_pass http://<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>/old_mvd/$skuId.html;  
-}  
-<span class="comment">#默认  </span>
-proxy_pass http://<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>/proxy/$skuId.html;  
-</code></pre><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## rewrite_by_lua </span></span><br><span class="line"></span><br><span class="line">执行内部<span class="built_in">URL</span>重写或者外部重定向，典型的如伪静态化的<span class="built_in">URL</span>重写。其默认执行在rewrite处理阶段的最后。</span><br><span class="line"></span><br><span class="line"><span class="number">1.1</span>、example.conf配置文件</span><br></pre></td></tr></table></figure>
-<pre><code><span class="xml">location /lua_rewrite_1 </span><span class="expression">{  
-    <span class="variable"><span class="keyword">default</span></span>_<span class="variable">type</span> <span class="string">"text/html"</span>;  
-    <span class="variable">rewrite</span>_<span class="variable">by</span>_<span class="variable">lua</span>_<span class="variable">file</span> <span class="end-block">/usr</span><span class="end-block">/example</span><span class="end-block">/lua</span><span class="end-block">/test</span>_<span class="variable">rewrite</span>_1<span class="variable">.lua</span>;  
-    <span class="variable">echo</span> <span class="string">"no rewrite"</span>;  
-}</span><span class="xml">  </span>
-</code></pre><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1<span class="class">.2</span>、<span class="tag">test_rewrite_1</span><span class="class">.lua</span></span><br></pre></td></tr></table></figure>
-<pre><code><span class="keyword">if</span> ngx.req.get_uri_args()[<span class="string">"jump"</span>] == <span class="string">"1"</span> <span class="keyword">then</span>  
-   <span class="constant">return</span> ngx.redirect(<span class="string">"http://www.jd.com?jump=1"</span>, <span class="number">302</span>)  
-<span class="function"><span class="keyword">end</span>  </span>
-</code></pre><figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">当我们请求http://<span class="number">192.168.1.2</span>/lua_rewrite_1时发现没有跳转，而请求http://<span class="number">192.168.1.2</span>/lua_rewrite_1?jump=1时发现跳转到京东首页了。 此处需要<span class="number">301/302</span>跳转根据自己需求定义</span><br><span class="line"></span><br><span class="line">2.1、example.conf配置文件</span><br></pre></td></tr></table></figure>
-<pre><code><span class="title">location</span> /lua_rewrite_2 {  
-    <span class="title">default_type</span> <span class="string">"text/html"</span>;  
-    <span class="title">rewrite_by_lua_file</span> /usr/example/lua/test_rewrite_2.lua;  
-    <span class="title">echo</span> <span class="string">"rewrite2 uri : <span class="variable">$uri</span>, a : <span class="variable">$arg_a</span>"</span>;  
-}  
-</code></pre><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">2<span class="class">.2</span>、<span class="tag">test_rewrite_2</span><span class="class">.lua</span></span><br></pre></td></tr></table></figure>
-<pre><code><span class="keyword">if</span> ngx.req.get_uri_args()[<span class="string">"jump"</span>] == <span class="string">"1"</span> <span class="keyword">then</span>  
-   ngx.req.set_uri(<span class="string">"/lua_rewrite_3"</span>, <span class="constant">false</span>);  
-   ngx.req.set_uri(<span class="string">"/lua_rewrite_4"</span>, <span class="constant">false</span>);  
-   ngx.req.set_uri_args({<span class="operator">a</span> = <span class="number">1</span>, b = <span class="number">2</span>});  
-<span class="function"><span class="keyword">end</span>   </span>
-</code></pre><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">ngx<span class="class">.req</span><span class="class">.set_uri</span>(uri, false)：可以内部重写uri（可以带参数），等价于 rewrite ^ /lua_rewrite_3；通过配合<span class="keyword">if</span>/<span class="keyword">else</span>可以实现 rewrite ^ /lua_rewrite_3 break；这种功能；此处两者都是location内部url重写，不会重新发起新的location匹配；</span><br><span class="line"></span><br><span class="line">ngx<span class="class">.req</span><span class="class">.set_uri_args</span>：重写请求参数，可以是字符串(a=<span class="number">1</span>&amp;b=<span class="number">2</span>)也可以是table；</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">访问如http:<span class="comment">//192.168.1.2/lua_rewrite_2?jump=0时得到响应</span></span><br><span class="line"></span><br><span class="line">rewrite2 uri : /lua_rewrite_2, <span class="tag">a</span> :</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">访问如http:<span class="comment">//192.168.1.2/lua_rewrite_2?jump=1时得到响应</span></span><br><span class="line"></span><br><span class="line">rewrite2 uri : /lua_rewrite_4, <span class="tag">a</span> : <span class="number">1</span></span><br><span class="line"><span class="number">3.1</span>、example.conf配置文件</span><br></pre></td></tr></table></figure>
-<pre><code><span class="xml">location /lua_rewrite_3 </span><span class="expression">{  
-    <span class="variable"><span class="keyword">default</span></span>_<span class="variable">type</span> <span class="string">"text/html"</span>;  
-    <span class="variable">rewrite</span>_<span class="variable">by</span>_<span class="variable">lua</span>_<span class="variable">file</span> <span class="end-block">/usr</span><span class="end-block">/example</span><span class="end-block">/lua</span><span class="end-block">/test</span>_<span class="variable">rewrite</span>_3<span class="variable">.lua</span>;  
-    <span class="variable">echo</span> <span class="string">"rewrite3 uri : $uri"</span>;  
-}</span><span class="xml">  </span>
-</code></pre><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">3<span class="class">.2</span>、<span class="tag">test_rewrite_3</span><span class="class">.lua</span></span><br></pre></td></tr></table></figure>
-<pre><code><span class="keyword">if</span> ngx.req.get_uri_args()[<span class="string">"jump"</span>] == <span class="string">"1"</span> <span class="keyword">then</span>  
-   ngx.req.set_uri(<span class="string">"/lua_rewrite_4"</span>, <span class="constant">true</span>);  
-   ngx.<span class="built_in">log</span>(ngx.ERR, <span class="string">"========="</span>)  
-   ngx.req.set_uri_args({<span class="operator">a</span> = <span class="number">1</span>, b = <span class="number">2</span>});  
-<span class="function"><span class="keyword">end</span>  </span>
-</code></pre><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">ngx.req.set_uri(uri, <span class="literal">true</span>)：可以内部重写uri，即会发起新的匹配location请求，等价于 rewrite ^ /lua_rewrite_4 last；此处看error <span class="built_in">log</span>是看不到我们记录的<span class="built_in">log</span>。</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">所以请求如http:<span class="comment">//192.168.1.2/lua_rewrite_3?jump=1会到新的location中得到响应，此处没有/lua_rewrite_4，所以匹配到/lua请求，得到类似如下的响应</span></span><br><span class="line"></span><br><span class="line">global variable : <span class="number">2</span> , shared memory : <span class="number">1</span> hello world</span><br><span class="line">即</span><br><span class="line"></span><br><span class="line">rewrite ^ /lua_rewrite_3;                 等价于  ngx.req.set_uri(<span class="string">"/lua_rewrite_3"</span>, <span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">rewrite ^ /lua_rewrite_3 <span class="keyword">break</span>;       等价于  ngx.req.set_uri(<span class="string">"/lua_rewrite_3"</span>, <span class="literal">false</span>); 加 <span class="keyword">if</span>/<span class="keyword">else</span>判断/<span class="keyword">break</span>/<span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">rewrite ^ /lua_rewrite_4 last;           等价于  ngx.req.set_uri(<span class="string">"/lua_rewrite_4"</span>, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">注意，在使用rewrite_by_lua时，开启rewrite_log on;后也看不到相应的rewrite <span class="built_in">log</span>。</span><br><span class="line"><span class="preprocessor">## access_by_lua </span></span><br><span class="line"></span><br><span class="line">用于访问控制，比如我们只允许内网ip访问，可以使用如下形式</span><br></pre></td></tr></table></figure>
-<p>allow     127.0.0.1;<br>allow     10.0.0.0/8;<br>allow     192.168.0.0/16;<br>allow     172.16.0.0/12;<br>deny      all;<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1<span class="class">.1</span>、<span class="tag">example</span><span class="class">.conf</span>配置文件</span><br></pre></td></tr></table></figure></p>
-<pre><code><span class="xml">location /lua_access </span><span class="expression">{  
-    <span class="variable"><span class="keyword">default</span></span>_<span class="variable">type</span> <span class="string">"text/html"</span>;  
-    <span class="variable">access</span>_<span class="variable">by</span>_<span class="variable">lua</span>_<span class="variable">file</span> <span class="end-block">/usr</span><span class="end-block">/example</span><span class="end-block">/lua</span><span class="end-block">/test</span>_<span class="variable">access.lua</span>;  
-    <span class="variable">echo</span> <span class="string">"access"</span>;  
-}</span><span class="xml">  </span>
-</code></pre><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1<span class="class">.2</span>、<span class="tag">test_access</span><span class="class">.lua</span></span><br></pre></td></tr></table></figure>
-<pre><code><span class="keyword">if</span> ngx.req.get_uri_args()[<span class="string">"token"</span>] ~= <span class="string">"123"</span> <span class="keyword">then</span>  
-<span class="command">   return</span> ngx.<span class="keyword">exit</span>(<span class="number">403</span>)  
-<span class="keyword">end</span>  
-</code></pre><p>```</p>
+<span class="number">4</span>、访问如http:<span class="comment">//192.168.1.2/lua 会发现全局变量一直不变，而共享内存一直递增</span>
+</code></pre><p>global variable : 2 , shared memory : 8 hello world </p>
+<p>另外注意一定在生产环境开启lua_code_cache，否则每个请求都会创建Lua VM实例。</p>
+<p>init_worker_by_lua</p>
+<p>用于启动一些定时任务，比如心跳检查，定时拉取服务器配置等等；此处的任务是跟Worker进程数量有关系的，比如有2个Worker进程那么就会启动两个完全一样的定时任务。</p>
+<h2 id="init_worker_by_lua">init_worker_by_lua</h2><p>用于启动一些定时任务，比如心跳检查，定时拉取服务器配置等等；此处的任务是跟Worker进程数量有关系的，比如有2个Worker进程那么就会启动两个完全一样的定时任务。</p>
+<p>1、nginx.conf配置文件中的http部分添加如下代码<br>1、nginx.conf配置文件中的http部分添加如下代码</p>
+<pre><code>init_worker_by_lua_file <span class="regexp">/usr/</span>example<span class="regexp">/lua/i</span>nit_worker.lua;  
+</code></pre><p> 2、init_worker.lua</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> <span class="keyword">count</span> = 0  </span><br><span class="line"><span class="keyword">local</span> delayInSeconds = 3  </span><br><span class="line"><span class="keyword">local</span> heartbeatCheck = nil  </span><br><span class="line">  </span><br><span class="line">heartbeatCheck = function(<span class="keyword">args</span>)  </span><br><span class="line">   <span class="keyword">count</span> = <span class="keyword">count</span> + 1  </span><br><span class="line">   ngx.<span class="literal">log</span>(ngx.<span class="keyword">ERR</span>, <span class="string">"do check "</span>, <span class="keyword">count</span>)  </span><br><span class="line">  </span><br><span class="line">   <span class="keyword">local</span> ok, <span class="keyword">err</span> = ngx.<span class="keyword">timer</span>.at(delayInSeconds, heartbeatCheck)  </span><br><span class="line">  </span><br><span class="line">   <span class="keyword">if</span> not ok then  </span><br><span class="line">      ngx.<span class="literal">log</span>(ngx.<span class="keyword">ERR</span>, <span class="string">"failed to startup heartbeart worker..."</span>, <span class="keyword">err</span>)  </span><br><span class="line">   end  </span><br><span class="line">end  </span><br><span class="line">  </span><br><span class="line">heartbeatCheck()</span><br></pre></td></tr></table></figure>
+<p>ngx.timer.at：延时调用相应的回调方法；ngx.timer.at(秒单位延时，回调函数，回调函数的参数列表)；可以将延时设置为0即得到一个立即执行的任务，任务不会在当前请求中执行不会阻塞当前请求，而是在一个轻量级线程中执行。</p>
+<p>另外根据实际情况设置如下指令</p>
+<p>lua_max_pending_timers 1024;  #最大等待任务数</p>
+<p>lua_max_running_timers 256;    #最大同时运行任务数</p>
+<h2 id="set_by_lua">set_by_lua</h2><p>设置nginx变量，我们用的set指令即使配合if指令也很难实现复杂的赋值逻辑；</p>
+<p>1.1、example.conf配置文件</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">location /lua_set_1 &#123;  </span><br><span class="line">    default_type <span class="string">"text/html"</span>;  </span><br><span class="line">    set_by_lua_file <span class="variable">$num</span> /usr/example/lua/test_set_1.lua;  </span><br><span class="line">    echo <span class="variable">$num</span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>set_by_lua_file：语法set_by_lua_file $var lua_file arg1 arg2…; 在lua代码中可以实现所有复杂的逻辑，但是要执行速度很快，不要阻塞；</p>
+<p>1.2、test_set_1.lua</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">local uri_args = ngx<span class="class">.req</span><span class="class">.get_uri_args</span>()  </span><br><span class="line">local <span class="tag">i</span> = uri_args[<span class="string">"i"</span>] or <span class="number">0</span>  </span><br><span class="line">local j = uri_args[<span class="string">"j"</span>] or <span class="number">0</span>  </span><br><span class="line">  </span><br><span class="line">return <span class="tag">i</span> + j</span><br></pre></td></tr></table></figure>
+<p>得到请求参数进行相加然后返回。</p>
+<p>访问如<a href="http://192.168.1.2/lua_set_1?i=1&amp;j=10进行测试。" target="_blank" rel="external">http://192.168.1.2/lua_set_1?i=1&amp;j=10进行测试。</a> 如果我们用纯set指令是无法实现的。</p>
+<p>再举个实际例子，我们实际工作时经常涉及到网站改版，有时候需要新老并存，或者切一部分流量到新版</p>
+<p>2.1、首先在example.conf中使用map指令来映射host到指定nginx变量，方便我们测试</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">############ 测试时使用的动态请求  </span></span><br><span class="line">map <span class="variable">$host</span> <span class="variable">$item_dynamic</span> &#123;  </span><br><span class="line">    <span class="keyword">default</span>                     <span class="string">"0"</span><span class="comment">;  </span></span><br><span class="line">    xxx.com            <span class="string">"1"</span><span class="comment">;  </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此时我们想访问item2014.jd.com时访问新版，那么我们可以简单的使用如</p>
+<figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="variable">$item</span>_dynamic = <span class="string">"1"</span>) &#123;  </span><br><span class="line">   proxy_pass http://new;  </span><br><span class="line">&#125;  </span><br><span class="line">proxy_pass http://old;</span><br></pre></td></tr></table></figure>
+<p>但是我们想把商品编号为为8位(比如品类为图书的)没有改版完成，需要按照相应规则跳转到老版，但是其他的到新版；虽然使用if指令能实现，但是比较麻烦，基本需要这样</p>
+<figure class="highlight tcl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span> jump <span class="string">"0"</span>;  </span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$item_dynamic</span> = <span class="string">"1"</span>) &#123;  </span><br><span class="line">    <span class="keyword">set</span> <span class="variable">$jump</span> <span class="string">"1"</span>;  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">if</span>(uri ~ <span class="string">"^/6[0-9]&#123;7&#125;.html"</span>) &#123;  </span><br><span class="line">   <span class="keyword">set</span> <span class="variable">$jump</span> <span class="string">"$&#123;jump&#125;2"</span>;  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="comment">#非强制访问新版，且访问指定范围的商品  </span></span><br><span class="line"><span class="keyword">if</span> (jump == <span class="string">"02"</span>) &#123;  </span><br><span class="line">   proxy_pass <span class="keyword">http</span>://old;  </span><br><span class="line">&#125;  </span><br><span class="line">proxy_pass <span class="keyword">http</span>://new;</span><br></pre></td></tr></table></figure>
+<p>以上规则还是比较简单的，如果涉及到更复杂的多重if/else或嵌套if/else实现起来就更痛苦了，可能需要到后端去做了；此时我们就可以借助lua了：</p>
+<figure class="highlight golo"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">set_by_lua $to_book '  </span><br><span class="line">     <span class="keyword">local</span> ngx_match = ngx.re.<span class="keyword">match</span>  </span><br><span class="line">     <span class="keyword">local</span> <span class="keyword">var</span> = ngx.<span class="keyword">var</span>  </span><br><span class="line">     <span class="keyword">local</span> skuId = <span class="keyword">var</span>.skuId  </span><br><span class="line">     <span class="keyword">local</span> r = <span class="keyword">var</span>.item_dynamic ~= <span class="string">"1"</span> and ngx.re.<span class="keyword">match</span>(skuId, <span class="string">"^[0-9]&#123;8&#125;$"</span>)  </span><br><span class="line">     <span class="keyword">if</span> r <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"1"</span> <span class="keyword">else</span> <span class="keyword">return</span> <span class="string">"0"</span> end;  </span><br><span class="line">';  </span><br><span class="line">set_by_lua $to_mvd '  </span><br><span class="line">     <span class="keyword">local</span> ngx_match = ngx.re.<span class="keyword">match</span>  </span><br><span class="line">     <span class="keyword">local</span> <span class="keyword">var</span> = ngx.<span class="keyword">var</span>  </span><br><span class="line">     <span class="keyword">local</span> skuId = <span class="keyword">var</span>.skuId  </span><br><span class="line">     <span class="keyword">local</span> r = <span class="keyword">var</span>.item_dynamic ~= <span class="string">"1"</span> and ngx.re.<span class="keyword">match</span>(skuId, <span class="string">"^[0-9]&#123;9&#125;$"</span>)  </span><br><span class="line">     <span class="keyword">if</span> r <span class="keyword">then</span> <span class="keyword">return</span> <span class="string">"1"</span> <span class="keyword">else</span> <span class="keyword">return</span> <span class="string">"0"</span> end;  </span><br><span class="line">';  </span><br><span class="line"><span class="comment">#自营图书  </span></span><br><span class="line"><span class="keyword">if</span> ($to_book) &#123;  </span><br><span class="line">    proxy_pass http://<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>/old_book/$skuId.html;  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="comment">#自营音像  </span></span><br><span class="line"><span class="keyword">if</span> ($to_mvd) &#123;  </span><br><span class="line">    proxy_pass http://<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>/old_mvd/$skuId.html;  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="comment">#默认  </span></span><br><span class="line">proxy_pass http://<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>/proxy/$skuId.html;</span><br></pre></td></tr></table></figure>
+<h2 id="rewrite_by_lua">rewrite_by_lua</h2><p>执行内部URL重写或者外部重定向，典型的如伪静态化的URL重写。其默认执行在rewrite处理阶段的最后。</p>
+<p>1.1、example.conf配置文件</p>
+<figure class="highlight dust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml">location /lua_rewrite_1 </span><span class="expression">&#123;  </span><br><span class="line">    <span class="variable"><span class="keyword">default</span></span>_<span class="variable">type</span> <span class="string">"text/html"</span>;  </span><br><span class="line">    <span class="variable">rewrite</span>_<span class="variable">by</span>_<span class="variable">lua</span>_<span class="variable">file</span> <span class="end-block">/usr</span><span class="end-block">/example</span><span class="end-block">/lua</span><span class="end-block">/test</span>_<span class="variable">rewrite</span>_1<span class="variable">.lua</span>;  </span><br><span class="line">    <span class="variable">echo</span> <span class="string">"no rewrite"</span>;  </span><br><span class="line">&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
+<p>1.2、test_rewrite_1.lua</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ngx.req.get_uri_args()[<span class="string">"jump"</span>] == <span class="string">"1"</span> <span class="keyword">then</span>  </span><br><span class="line"><span class="command">   return</span> ngx.redirect(<span class="string">"http://www.jd.com?jump=1"</span>, <span class="number">302</span>)  </span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>当我们请求<a href="http://192.168.1.2/lua_rewrite_1时发现没有跳转，而请求http://192.168.1.2/lua_rewrite_1?jump=1时发现跳转到京东首页了。" target="_blank" rel="external">http://192.168.1.2/lua_rewrite_1时发现没有跳转，而请求http://192.168.1.2/lua_rewrite_1?jump=1时发现跳转到京东首页了。</a> 此处需要301/302跳转根据自己需求定义</p>
+<p>2.1、example.conf配置文件</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">location</span> /lua_rewrite_2 &#123;  </span><br><span class="line">    <span class="title">default_type</span> <span class="string">"text/html"</span>;  </span><br><span class="line">    <span class="title">rewrite_by_lua_file</span> /usr/example/lua/test_rewrite_2.lua;  </span><br><span class="line">    <span class="title">echo</span> <span class="string">"rewrite2 uri : <span class="variable">$uri</span>, a : <span class="variable">$arg_a</span>"</span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>2.2、test_rewrite_2.lua</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ngx.req.get_uri_args()[<span class="string">"jump"</span>] == <span class="string">"1"</span> <span class="keyword">then</span>  </span><br><span class="line">   ngx.req.set_uri(<span class="string">"/lua_rewrite_3"</span>, <span class="constant">false</span>);  </span><br><span class="line">   ngx.req.set_uri(<span class="string">"/lua_rewrite_4"</span>, <span class="constant">false</span>);  </span><br><span class="line">   ngx.req.set_uri_args(&#123;<span class="operator">a</span> = <span class="number">1</span>, b = <span class="number">2</span>&#125;);  </span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>ngx.req.set_uri(uri, false)：可以内部重写uri（可以带参数），等价于 rewrite ^ /lua_rewrite_3；通过配合if/else可以实现 rewrite ^ /lua_rewrite_3 break；这种功能；此处两者都是location内部url重写，不会重新发起新的location匹配；</p>
+<p>ngx.req.set_uri_args：重写请求参数，可以是字符串(a=1&amp;b=2)也可以是table；</p>
+<p>访问如<a href="http://192.168.1.2/lua_rewrite_2?jump=0时得到响应" target="_blank" rel="external">http://192.168.1.2/lua_rewrite_2?jump=0时得到响应</a></p>
+<p>rewrite2 uri : /lua_rewrite_2, a :</p>
+<p>访问如<a href="http://192.168.1.2/lua_rewrite_2?jump=1时得到响应" target="_blank" rel="external">http://192.168.1.2/lua_rewrite_2?jump=1时得到响应</a></p>
+<p>rewrite2 uri : /lua_rewrite_4, a : 1<br>3.1、example.conf配置文件</p>
+<figure class="highlight dust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml">location /lua_rewrite_3 </span><span class="expression">&#123;  </span><br><span class="line">    <span class="variable"><span class="keyword">default</span></span>_<span class="variable">type</span> <span class="string">"text/html"</span>;  </span><br><span class="line">    <span class="variable">rewrite</span>_<span class="variable">by</span>_<span class="variable">lua</span>_<span class="variable">file</span> <span class="end-block">/usr</span><span class="end-block">/example</span><span class="end-block">/lua</span><span class="end-block">/test</span>_<span class="variable">rewrite</span>_3<span class="variable">.lua</span>;  </span><br><span class="line">    <span class="variable">echo</span> <span class="string">"rewrite3 uri : $uri"</span>;  </span><br><span class="line">&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
+<p>3.2、test_rewrite_3.lua</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ngx.req.get_uri_args()[<span class="string">"jump"</span>] == <span class="string">"1"</span> <span class="keyword">then</span>  </span><br><span class="line">   ngx.req.set_uri(<span class="string">"/lua_rewrite_4"</span>, <span class="constant">true</span>);  </span><br><span class="line">   ngx.<span class="built_in">log</span>(ngx.ERR, <span class="string">"========="</span>)  </span><br><span class="line">   ngx.req.set_uri_args(&#123;<span class="operator">a</span> = <span class="number">1</span>, b = <span class="number">2</span>&#125;);  </span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>ngx.req.set_uri(uri, true)：可以内部重写uri，即会发起新的匹配location请求，等价于 rewrite ^ /lua_rewrite_4 last；此处看error log是看不到我们记录的log。</p>
+<p>所以请求如<a href="http://192.168.1.2/lua_rewrite_3?jump=1会到新的location中得到响应，此处没有/lua_rewrite_4，所以匹配到/lua请求，得到类似如下的响应" target="_blank" rel="external">http://192.168.1.2/lua_rewrite_3?jump=1会到新的location中得到响应，此处没有/lua_rewrite_4，所以匹配到/lua请求，得到类似如下的响应</a></p>
+<p>global variable : 2 , shared memory : 1 hello world<br>即</p>
+<p>rewrite ^ /lua_rewrite_3;                 等价于  ngx.req.set_uri(“/lua_rewrite_3”, false);</p>
+<p>rewrite ^ /lua_rewrite_3 break;       等价于  ngx.req.set_uri(“/lua_rewrite_3”, false); 加 if/else判断/break/return</p>
+<p>rewrite ^ /lua_rewrite_4 last;           等价于  ngx.req.set_uri(“/lua_rewrite_4”, true);</p>
+<p>注意，在使用rewrite_by_lua时，开启rewrite_log on;后也看不到相应的rewrite log。</p>
+<h2 id="access_by_lua">access_by_lua</h2><p>用于访问控制，比如我们只允许内网ip访问，可以使用如下形式</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">allow     <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>;  </span><br><span class="line">allow     <span class="number">10.0</span><span class="number">.0</span><span class="number">.0</span>/<span class="number">8</span>;  </span><br><span class="line">allow     <span class="number">192.168</span><span class="number">.0</span><span class="number">.0</span>/<span class="number">16</span>;  </span><br><span class="line">allow     <span class="number">172.16</span><span class="number">.0</span><span class="number">.0</span>/<span class="number">12</span>;  </span><br><span class="line">deny      all;</span><br></pre></td></tr></table></figure>
+<p>1.1、example.conf配置文件</p>
+<figure class="highlight dust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml">location /lua_access </span><span class="expression">&#123;  </span><br><span class="line">    <span class="variable"><span class="keyword">default</span></span>_<span class="variable">type</span> <span class="string">"text/html"</span>;  </span><br><span class="line">    <span class="variable">access</span>_<span class="variable">by</span>_<span class="variable">lua</span>_<span class="variable">file</span> <span class="end-block">/usr</span><span class="end-block">/example</span><span class="end-block">/lua</span><span class="end-block">/test</span>_<span class="variable">access.lua</span>;  </span><br><span class="line">    <span class="variable">echo</span> <span class="string">"access"</span>;  </span><br><span class="line">&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
+<p>1.2、test_access.lua</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ngx.req.get_uri_args()[<span class="string">"token"</span>] ~= <span class="string">"123"</span> <span class="keyword">then</span>  </span><br><span class="line"><span class="command">   return</span> ngx.<span class="keyword">exit</span>(<span class="number">403</span>)  </span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
 <p>即如果访问如<a href="http://192.168.1.2/lua_access?token=234将得到403" target="_blank" rel="external">http://192.168.1.2/lua_access?token=234将得到403</a> Forbidden的响应。这样我们可以根据如cookie/用户token来决定是否有访问权限。</p>
 <h2 id="content_by_lua">content_by_lua</h2><p>此指令之前已经用过了，此处就不讲解了。</p>
 <p>另外在使用PCRE进行正则匹配时需要注意正则的写法，具体规则请参考<a href="http://wiki.nginx.org/HttpLuaModule中的Special" target="_blank" rel="external">http://wiki.nginx.org/HttpLuaModule中的Special</a> PCRE Sequences部分。还有其他的注意事项也请阅读官方文档。</p>
@@ -311,7 +259,7 @@ proxy_pass http://<span class="number">127.0</span><span class="number">.0</span
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2015/11/07/lua2/" data-id="cigrgiody0006igt7bbxy5fnr" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2015/11/07/lua2/" data-id="cigrvy2f2000btgt7e9dw9rkp" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/lua/">lua</a></li></ul>
@@ -321,6 +269,15 @@ proxy_pass http://<span class="number">127.0</span><span class="number">.0</span
   
     
 <nav id="article-nav">
+  
+    <a href="/2015/11/09/redis/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          nginx和lua开发之Redis安装与使用
+        
+      </div>
+    </a>
   
   
     <a href="/2015/11/07/lua1/" id="article-nav-older" class="article-nav-link-wrap">
@@ -341,7 +298,7 @@ proxy_pass http://<span class="number">127.0</span><span class="number">.0</span
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/lua/">lua</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/markdown/">markdown</a><span class="category-list-count">1</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/lua/">lua</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/markdown/">markdown</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a><span class="category-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -350,7 +307,7 @@ proxy_pass http://<span class="number">127.0</span><span class="number">.0</span
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lua/">lua</a><span class="tag-list-count">2</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/css/">css</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/lua/">lua</a><span class="tag-list-count">3</span></li></ul>
     </div>
   </div>
 
@@ -368,7 +325,7 @@ proxy_pass http://<span class="number">127.0</span><span class="number">.0</span
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">November 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">October 2015</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -378,6 +335,10 @@ proxy_pass http://<span class="number">127.0</span><span class="number">.0</span
     <h3 class="widget-title">Recents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2015/11/09/redis/">nginx和lua开发之Redis安装与使用</a>
+          </li>
         
           <li>
             <a href="/2015/11/07/lua2/">nginx和lua开发二</a>
@@ -393,10 +354,6 @@ proxy_pass http://<span class="number">127.0</span><span class="number">.0</span
         
           <li>
             <a href="/2015/11/06/hello-world/">Hello World</a>
-          </li>
-        
-          <li>
-            <a href="/2015/10/21/demo/">辨析 Sass 中的 Map 和 List</a>
           </li>
         
       </ul>
